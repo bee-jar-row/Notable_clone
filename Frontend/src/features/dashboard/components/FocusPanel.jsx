@@ -5,8 +5,10 @@ import { formatCountdown } from '../../focus/FocusSessionContext'
 function FocusPanel({
   activeSession,
   isExpired,
+  onDownloadSupportResource,
   onCompleteTodo,
   onEndFocus,
+  onOpenSupportNote,
   onOpenFocus,
   onPrepareFocus,
   progress,
@@ -134,7 +136,9 @@ function FocusPanel({
                         <div>
                           <strong>Notes</strong>
                           {studyBlock.notes.slice(0, 3).map((note) => (
-                            <p key={note.id}>{note.title}</p>
+                            <button className="focus-support-link" key={note.id} onClick={() => onOpenSupportNote(note)} type="button">
+                              {note.title}
+                            </button>
                           ))}
                         </div>
                       )}
@@ -142,7 +146,14 @@ function FocusPanel({
                         <div>
                           <strong>Resources</strong>
                           {studyBlock.resources.slice(0, 3).map((resource) => (
-                            <p key={resource.id}>{resource.original_name}</p>
+                            <button
+                              className="focus-support-link"
+                              key={resource.id}
+                              onClick={() => onDownloadSupportResource(resource)}
+                              type="button"
+                            >
+                              {resource.original_name}
+                            </button>
                           ))}
                         </div>
                       )}

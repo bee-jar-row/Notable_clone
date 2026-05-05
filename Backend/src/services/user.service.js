@@ -1,6 +1,22 @@
 const bcrypt = require('bcryptjs');
 const User = require('../repositories/userRepository');
 
+function normalizeGoogleCalendarEmbedUrl(value) {
+  const trimmed = String(value || '').trim();
+  if (!trimmed) return null;
+
+  try {
+    const url = new URL(trimmed);
+    const isGoogleCalendarEmbed = url.protocol === 'https:'
+      && url.hostname === 'calendar.google.com'
+      && url.pathname === '/calendar/embed';
+
+    return isGoogleCalendarEmbed ? url.toString() : false;
+  } catch {
+    return false;
+  }
+}
+
 class UserService {
   static getProfile(userId) {
     const user = User.findPublicById(userId);
@@ -17,12 +33,20 @@ class UserService {
       return { status: 400, body: { message: 'Name is required!' } };
     }
 
+    const normalizedGcalUrl = normalizeGoogleCalendarEmbedUrl(gcal_url);
+    if (normalizedGcalUrl === false) {
+      return {
+        status: 400,
+        body: { message: 'Google Calendar URL must be a public calendar embed URL!' }
+      };
+    }
+
     const user = User.findById(userId);
     if (!user) {
       return { status: 404, body: { message: 'User not found!' } };
     }
 
-    User.updateProfile(userId, name, display_name, gcal_url || null);
+    User.updateProfile(userId, name, display_name, normalizedGcalUrl);
     return { status: 200, body: { message: 'Profile updated successfully!' } };
   }
 

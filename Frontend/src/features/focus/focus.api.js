@@ -1,4 +1,4 @@
-import { apiRequest } from '../../shared/api/api'
+import { apiRequest, downloadResource } from '../../shared/api/api'
 
 export function getFocusSessions() {
   return apiRequest('/focus-sessions')
@@ -36,6 +36,10 @@ export function getFocusNotes() {
 
 export function getFocusResources() {
   return apiRequest('/resources')
+}
+
+export function downloadFocusResource(resourceId, filename) {
+  return downloadResource(resourceId, filename)
 }
 
 export function getFocusTodoCandidates() {

@@ -378,18 +378,34 @@
 .resource-row__action {
   min-width: 32px;
   min-height: 32px;
-  border: 0;
-  background: transparent;
+  border: 1px solid #E5E5E5;
+  border-radius: 6px;
+  background: #FAFAFA;
   color: #68768d;
-  padding: 2px 4px;
-  font-size: 14px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 700;
   line-height: 1;
+}
+
+.resource-row__actions,
+.note-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
 }
 
 .resource-row__action:hover,
 .resource-row__action:focus-visible {
   background: #FAFAFA;
   color: #1A303A;
+}
+
+.resource-row__action--danger:hover,
+.resource-row__action--danger:focus-visible {
+  border-color: #B32020;
+  color: #B32020;
 }
 
 .note-row {
@@ -425,6 +441,18 @@
 .note-row span {
   color: #68768d;
   font-size: 12px;
+}
+
+.note-row__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.note-row__actions .pill-card__delete {
+  min-height: 32px;
 }
 
 .chapter-card-new {

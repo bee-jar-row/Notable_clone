@@ -3,8 +3,6 @@ import {
   BoldItalicUnderlineToggles,
   CodeToggle,
   CreateLink,
-  DiffSourceToggleWrapper,
-  InsertCodeBlock,
   InsertTable,
   ListsToggle,
   MDXEditor,
@@ -26,7 +24,7 @@ import { useEffect, useRef } from 'react'
 
 function toolbarContents() {
   return (
-    <DiffSourceToggleWrapper>
+    <>
       <UndoRedo />
       <Separator />
       <BlockTypeSelect />
@@ -36,8 +34,7 @@ function toolbarContents() {
       <ListsToggle />
       <CreateLink />
       <InsertTable />
-      <InsertCodeBlock />
-    </DiffSourceToggleWrapper>
+    </>
   )
 }
 

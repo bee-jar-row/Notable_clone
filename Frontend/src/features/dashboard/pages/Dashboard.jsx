@@ -87,8 +87,10 @@ function Dashboard() {
               activeSession={focus.activeSession}
               isExpired={focus.isExpired}
               onCompleteTodo={focus.completeTodo}
+              onDownloadSupportResource={focus.downloadSupportResource}
               onEndFocus={focus.endFocus}
               onOpenFocus={focus.openOverlay}
+              onOpenSupportNote={focus.openSupportNote}
               onPrepareFocus={focus.openPrepareFocus}
               progress={focus.progress}
               recommendedBlock={data.recommendedBlock}

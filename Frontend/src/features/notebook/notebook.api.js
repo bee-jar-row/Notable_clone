@@ -41,6 +41,10 @@ export function uploadResource(formData) {
   })
 }
 
+export function deleteResource(resourceId) {
+  return apiRequest(`/resources/${resourceId}`, { method: 'DELETE' })
+}
+
 export function downloadNotebookResource(resourceId, filename) {
   return downloadResource(resourceId, filename)
 }
@@ -73,4 +77,15 @@ export function createNote(payload) {
     method: 'POST',
     body: JSON.stringify(payload),
   })
+}
+
+export function updateNote(noteId, payload) {
+  return apiRequest(`/notes/${noteId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  })
+}
+
+export function deleteNote(noteId) {
+  return apiRequest(`/notes/${noteId}`, { method: 'DELETE' })
 }
