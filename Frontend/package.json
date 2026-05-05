@@ -7,9 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "smoke": "npm run lint && npm run build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mdxeditor/editor": "^3.55.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.14.2"

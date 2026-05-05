@@ -1,4 +1,4 @@
-const Note = require('../models/noteModel');
+const Note = require('../repositories/noteRepository');
 
 class NoteController {
   // Get all notes for the logged-in user
@@ -26,7 +26,11 @@ class NoteController {
   static update(req, res) {
     try {
       const { title, content } = req.body;
-      Note.update(req.params.id, title, content);
+      const note = Note.findByIdAndUser(req.params.id, req.userId);
+      if (!note) {
+        return res.status(404).json({ message: 'Note not found!' });
+      }
+      Note.update(req.params.id, req.userId, title, content);
       res.json({ message: 'Note updated!' });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
@@ -36,7 +40,11 @@ class NoteController {
   // Delete a note
   static delete(req, res) {
     try {
-      Note.delete(req.params.id);
+      const note = Note.findByIdAndUser(req.params.id, req.userId);
+      if (!note) {
+        return res.status(404).json({ message: 'Note not found!' });
+      }
+      Note.delete(req.params.id, req.userId);
       res.json({ message: 'Note deleted!' });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });

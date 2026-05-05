@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inria+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --color-text: #3F3F3D;
+  --color-heading: #4F4F4D;
+  --color-muted: #6F6F6D;
+  --color-surface: #FFFFFF;
+  --color-background: #FFFFFF;
+  --color-border: #D0D0D0;
+  --color-border-strong: #9F9F9C;
+  --reference-panel: #D9D9D9;
+  --reference-panel-soft: #ECECEC;
+  --reference-card: #F9F9F9;
+  --reference-cover: #525250;
+  --reference-ink: #4F4F4D;
+  --focus-ring: 0 0 0 3px rgba(79,79,77,0.18);
+  --radius-panel: 12px;
+  --radius-control: 6px;
+  --target-size: 40px;
+}

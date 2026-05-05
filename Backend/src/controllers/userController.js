@@ -1,31 +1,31 @@
-const User = require('../models/userModel');
+const UserService = require('../services/user.service');
+
+function sendResult(res, result) {
+  return res.status(result.status).json(result.body);
+}
 
 class UserController {
-  // Get current user profile
   static getProfile(req, res) {
     try {
-      const user = User.findById(req.userId);
-      if (!user) {
-        return res.status(404).json({ message: 'User not found!' });
-      }
-      res.json({ user });
+      return sendResult(res, UserService.getProfile(req.userId));
     } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
+      return res.status(500).json({ message: 'Server error', error: error.message });
     }
   }
 
-  // Update current user profile
   static updateProfile(req, res) {
     try {
-      const { name, display_name } = req.body;
-      const user = User.findById(req.userId);
-      if (!user) {
-        return res.status(404).json({ message: 'User not found!' });
-      }
-      User.updateProfile(req.userId, name, display_name);
-      res.json({ message: 'Profile updated successfully!' });
+      return sendResult(res, UserService.updateProfile(req.userId, req.body));
     } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
+      return res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  }
+
+  static async changePassword(req, res) {
+    try {
+      return sendResult(res, await UserService.changePassword(req.userId, req.body));
+    } catch (error) {
+      return res.status(500).json({ message: 'Server error', error: error.message });
     }
   }
 }

@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/userModel');
+const User = require('../repositories/userRepository');
 
 class AuthController {
 // Register a new user

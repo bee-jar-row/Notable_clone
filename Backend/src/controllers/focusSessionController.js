@@ -1,90 +1,55 @@
-const FocusSession = require('../models/focusSessionModel');
-const Todo = require('../models/todoModel');
-const BHPSLogic = require('./bhpsLogic');
+const FocusService = require('../services/focus.service');
+
+function sendResult(res, result) {
+  return res.status(result.status).json(result.body);
+}
 
 class FocusSessionController {
-  // Start a new focus session
   static start(req, res) {
     try {
-      const { duration_minutes, todo_ids } = req.body;
-
-      // Create session
-      const sessionId = FocusSession.create(req.userId, duration_minutes || 50);
-
-      // Add todos to session if provided
-      if (todo_ids && todo_ids.length > 0) {
-        todo_ids.forEach(todoId => {
-          FocusSession.addTodo(sessionId, todoId);
-        });
-      }
-
-      res.status(201).json({
-        message: 'Focus session started!',
-        sessionId,
-        duration_minutes: duration_minutes || 50
-      });
+      return sendResult(res, FocusService.start(req.userId, req.body));
     } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
+      return res.status(500).json({ message: 'Server error', error: error.message });
     }
   }
 
-  // End a focus session
   static end(req, res) {
     try {
-      const session = FocusSession.findById(req.params.id);
-      if (!session) {
-        return res.status(404).json({ message: 'Session not found!' });
-      }
-
-      FocusSession.end(req.params.id);
-      res.json({ message: 'Focus session ended!' });
+      return sendResult(res, FocusService.end(req.userId, req.params.id));
     } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
+      return res.status(500).json({ message: 'Server error', error: error.message });
     }
   }
 
-  // Get session summary
+  static update(req, res) {
+    try {
+      return sendResult(res, FocusService.update(req.userId, req.params.id, req.body));
+    } catch (error) {
+      return res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  }
+
   static getSummary(req, res) {
     try {
-      const session = FocusSession.findById(req.params.id);
-      if (!session) {
-        return res.status(404).json({ message: 'Session not found!' });
-      }
-
-      const summary = FocusSession.getSummary(req.params.id);
-      res.json({ summary });
+      return sendResult(res, FocusService.getSummary(req.userId, req.params.id));
     } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
+      return res.status(500).json({ message: 'Server error', error: error.message });
     }
   }
 
-  // Get all sessions for user
   static getAll(req, res) {
     try {
-      const sessions = FocusSession.findAllByUser(req.userId);
-      res.json({ sessions });
+      return sendResult(res, FocusService.getAll(req.userId));
     } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
+      return res.status(500).json({ message: 'Server error', error: error.message });
     }
   }
 
-  // Get recommended todos for a focus session based on BHPS
   static getRecommended(req, res) {
     try {
-      const todos = Todo.findAllByUser(req.userId);
-
-      // Filter incomplete todos only
-      const incompleteTodos = todos.filter(t => t.is_completed === 0);
-
-      // Rank by BHPS and take top 5
-      const ranked = BHPSLogic.rankTodos(incompleteTodos).slice(0, 5);
-
-      res.json({
-        message: 'Recommended todos for your focus session!',
-        recommended_todos: ranked
-      });
+      return sendResult(res, FocusService.getRecommended(req.userId));
     } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
+      return res.status(500).json({ message: 'Server error', error: error.message });
     }
   }
 }

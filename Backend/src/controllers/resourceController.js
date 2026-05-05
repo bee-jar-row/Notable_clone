@@ -1,4 +1,6 @@
-const Resource = require('../models/resourceModel');
+const Resource = require('../repositories/resourceRepository');
+const Notebook = require('../repositories/notebookRepository');
+const Chapter = require('../repositories/chapterRepository');
 const path = require('path');
 const fs = require('fs');
 
@@ -11,6 +13,15 @@ class ResourceController {
       }
 
       const { notebook_id, chapter_id } = req.body;
+      if (!notebook_id && !chapter_id) {
+        return res.status(400).json({ message: 'Notebook or chapter is required!' });
+      }
+      if (notebook_id && !Notebook.findByIdAndUser(notebook_id, req.userId)) {
+        return res.status(404).json({ message: 'Notebook not found!' });
+      }
+      if (chapter_id && !Chapter.findByIdAndUser(chapter_id, req.userId)) {
+        return res.status(404).json({ message: 'Chapter not found!' });
+      }
 
       const resourceId = Resource.create(
         req.userId,
@@ -47,7 +58,7 @@ class ResourceController {
   // Get resources by notebook
   static getByNotebook(req, res) {
     try {
-      const resources = Resource.findByNotebook(req.params.notebookId);
+      const resources = Resource.findByNotebookAndUser(req.params.notebookId, req.userId);
       res.json({ resources });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
@@ -57,7 +68,7 @@ class ResourceController {
   // Get resources by chapter
   static getByChapter(req, res) {
     try {
-      const resources = Resource.findByChapter(req.params.chapterId);
+      const resources = Resource.findByChapterAndUser(req.params.chapterId, req.userId);
       res.json({ resources });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
@@ -67,7 +78,7 @@ class ResourceController {
   // Download a resource
   static download(req, res) {
     try {
-      const resource = Resource.findById(req.params.id);
+      const resource = Resource.findByIdAndUser(req.params.id, req.userId);
       if (!resource) {
         return res.status(404).json({ message: 'Resource not found!' });
       }
@@ -87,7 +98,7 @@ class ResourceController {
   // Delete a resource
   static delete(req, res) {
     try {
-      const resource = Resource.findById(req.params.id);
+      const resource = Resource.findByIdAndUser(req.params.id, req.userId);
       if (!resource) {
         return res.status(404).json({ message: 'Resource not found!' });
       }
@@ -98,7 +109,7 @@ class ResourceController {
         fs.unlinkSync(filePath);
       }
 
-      Resource.delete(req.params.id);
+      Resource.delete(req.params.id, req.userId);
       res.json({ message: 'Resource deleted!' });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });

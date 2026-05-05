@@ -11,7 +11,8 @@ class GoogleCalendarController {
   static getAuthUrl(req, res) {
     const authUrl = oauth2Client.generateAuthUrl({
       access_type: 'offline',
-      scope: ['https://www.googleapis.com/auth/calendar.readonly']
+      scope: ['https://www.googleapis.com/auth/calendar.events',
+        'https://www.googleapis.com/auth/calendar.readonly']
     });
     res.json({ authUrl });
   }

@@ -1,25 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Inria+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+@import './styles/tokens.css';
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@import './styles/base.css';
 
-body {
-  font-family: 'Inter', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f9f9f9;
-  width: 100%;
-  min-height: 100vh;
-}
+@import './styles/layout.css';
 
-h1, h2, h3 {
-  font-family: 'Inria Sans', sans-serif;
-}
+@import './styles/components.css';
 
-#root {
-  width: 100%;
-  min-height: 100vh;
-}
+@import './features/auth/auth.css';
+
+@import './features/workspace/workspace.css';
+
+@import './features/dashboard/dashboard.css';
+
+@import './features/search/search.css';
+
+@import './features/focus/focus.css';
+
+@import './features/notebook/notebook.css';
+
+@import './features/chapter/chapter.css';
+
+@import './features/settings/settings.css';
+
+@import './styles/theme.css';

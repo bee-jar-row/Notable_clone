@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 // Import database
-const db = require('./database/db');
+const db = require('./src/db');
 
 // Import routes
 const api = require('./src/routes/api');

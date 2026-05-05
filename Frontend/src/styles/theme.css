@@ -1,0 +1,227 @@
+/* Reference grayscale theme, sampled from the supplied dashboard mockup. */
+body,
+.auth-page {
+  background: #FFFFFF;
+  color: var(--color-text);
+}
+
+h1,
+h2,
+h3,
+.auth-title,
+.topbar__identity h1,
+.dashboard-topbar h1,
+.notebook-topbar h1,
+.settings-topbar h1,
+.chapter-reader h2,
+.folder-detail-section-header h2 {
+  color: var(--reference-ink);
+}
+
+.topbar,
+.dashboard-topbar,
+.notebook-topbar,
+.settings-topbar,
+.folder-detail-topbar,
+.chapter-detail-topbar {
+  border-color: #C4C4C2;
+  background: var(--reference-panel);
+}
+
+.dashboard-panel,
+.notebook-panel,
+.panel,
+.settings-card,
+.auth-card,
+.chapter-reader,
+.chapter-editor-panel,
+.modal-content {
+  border-color: #CFCFCD;
+  background: var(--reference-panel);
+}
+
+.dashboard-panel__header,
+.notebook-panel-header,
+.modal-header,
+.settings-card__header,
+.panel__header {
+  border-color: #A7A7A5;
+  background: var(--reference-panel);
+}
+
+.dashboard-panel__body,
+.modal-body,
+.settings-card,
+.auth-card,
+.chapter-editor-form {
+  background: var(--reference-panel);
+}
+
+.calendar-event-row,
+.dashboard-task-row,
+.pill-card,
+.resource-row,
+.note-row,
+.chapter-card-new,
+.demo-login-card,
+.calendar-empty-state {
+  border-color: #D6D6D4;
+  background: #FFFFFF;
+}
+
+.folder-card,
+.dashboard-folder-card .folder-card,
+.dashboard-notebook-card,
+.notebook-info,
+.chapter-reader {
+  border-color: #D0D0CE;
+  background: var(--reference-panel);
+}
+
+.folder-tab,
+.dashboard-folder-card .folder-tab,
+.dashboard-notebook-card .notebook-cover,
+.notebook-cover,
+.calendar-dot,
+.pill-card--completed .pill-card__check,
+.pill-card--completed .pill-card__status,
+.floating-timer__bar span {
+  background: var(--reference-cover);
+}
+
+.dashboard-notebook-card .notebook-cover svg line,
+.notebook-cover svg line {
+  stroke: #DCDCDC;
+}
+
+button,
+.auth-submit-btn {
+  background: var(--reference-cover);
+  color: #FFFFFF;
+}
+
+.ghost-button,
+.demo-login-button,
+.google-btn,
+.dashboard-tool-button,
+.notebook-tool-button,
+.icon-button,
+.plus-btn,
+.chapter-action,
+.pill-card__delete,
+.add-card-button__action,
+.resource-row__action {
+  border-color: #CFCFCD;
+  background: #F7F7F7;
+  color: var(--reference-ink);
+}
+
+.dashboard-tool-button:hover,
+.dashboard-tool-button:focus-visible,
+.notebook-tool-button:hover,
+.notebook-tool-button:focus-visible,
+.icon-button:hover,
+.icon-button:focus-visible,
+.plus-btn:hover,
+.plus-btn:focus-visible,
+.ghost-button:hover,
+.ghost-button:focus-visible,
+.chapter-action:hover,
+.chapter-action:focus-visible,
+.pill-card__delete:hover,
+.pill-card__delete:focus-visible,
+.add-card-button__action:hover,
+.add-card-button__action:focus-visible,
+.resource-row__action:hover,
+.resource-row__action:focus-visible {
+  border-color: var(--reference-cover);
+  background: #FFFFFF;
+  color: var(--reference-cover);
+}
+
+input,
+select,
+textarea,
+.auth-form-input,
+.dashboard-search,
+.notebook-search,
+.search-box {
+  border-color: #A7A7A5;
+  background: #EFEFEF;
+  color: var(--color-text);
+}
+
+input::placeholder,
+textarea::placeholder,
+.dashboard-search input::placeholder,
+.notebook-search input::placeholder {
+  color: #6F6F6D;
+}
+
+.muted,
+.pill-card-subtitle,
+.pill-card-meta,
+.dashboard-task-row p,
+.calendar-event-row p,
+.notebook-info span,
+.dashboard-folder-card span,
+.dashboard-notebook-card span,
+.settings-card__header p,
+.chapter-meta,
+.note-row span {
+  color: var(--color-muted);
+}
+
+.workspace-item__delete {
+  border: 1px solid #CFCFCD;
+  background: rgba(255,255,255,0.94);
+  color: var(--reference-ink);
+}
+
+.workspace-grid,
+.dashboard-page .workspace-grid {
+  border-color: #D0D0CE;
+}
+
+.dashboard-menu__content {
+  border-color: #CFCFCD;
+  background: #FFFFFF;
+}
+
+.dashboard-menu__section button.is-active {
+  border-color: var(--reference-cover);
+  background: var(--reference-cover);
+  color: #FFFFFF;
+}
+
+.dashboard-check-button,
+.pill-card__check,
+.pill-card__status {
+  border-color: var(--reference-cover);
+  background: #FFFFFF;
+}
+
+.pill-card--completed {
+  background: #F2F2F2;
+}
+
+.floating-timer {
+  border-color: #CFCFCD;
+  background: var(--reference-panel);
+}
+
+.modal-overlay {
+  background: rgba(79,79,77,0.38);
+}
+
+.error {
+  border-color: #C9A8A8;
+  background: #EFE2E2;
+  color: #6E3A3A;
+}
+
+.success {
+  border-color: #AEBBAF;
+  background: #E6E9E3;
+  color: #3F5D43;
+}

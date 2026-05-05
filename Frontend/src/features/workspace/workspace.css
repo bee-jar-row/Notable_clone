@@ -1,0 +1,187 @@
+.folder-card-wrapper {
+  position: relative;
+  margin-top: 12px;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+}
+
+.folder-tab {
+  position: absolute;
+  top: -12px;
+  left: 0;
+  width: 40%;
+  height: 20px;
+  background: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  z-index: 0;
+}
+
+.folder-card {
+  position: relative;
+  background: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 0 8px 8px 8px;
+  padding: 16px;
+  min-height: 100px;
+  display: grid;
+  gap: 8px;
+  z-index: 1;
+}
+
+.notebook-card-v2 {
+  background: #fff;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: none;
+  height: 100%;
+}
+
+.add-card-button {
+  background: transparent;
+  border: 2px dashed #E5E5E5;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  min-height: 100px;
+  color: #A3A3A3;
+  font-size: 32px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.add-card-button--split {
+  align-content: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 16px;
+}
+
+.add-card-button:hover {
+  border-color: #1A303A;
+  color: #1A303A;
+  background: #FAFAFA;
+}
+
+.notebook-cover {
+  height: 80px;
+  background: #F0F0F0;
+  position: relative;
+}
+
+.notebook-cover svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.notebook-info {
+  padding: 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.notebook-info span {
+  color: #68768d;
+  font-size: 13px;
+}
+
+.folder-detail-page,
+.chapter-detail-page {
+  width: min(1280px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 48px;
+}
+
+.folder-detail-topbar,
+.chapter-detail-topbar {
+  margin-bottom: 24px;
+}
+
+.folder-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
+  gap: 24px;
+  align-items: start;
+}
+
+.folder-detail-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.folder-detail-section-header h2 {
+  margin: 0;
+  color: #1A303A;
+  font-family: 'Inria Sans', 'Inter', sans-serif;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.folder-detail-section-header span {
+  color: #68768d;
+  font-size: 13px;
+}
+
+.folder-detail-section-header .inline-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.folder-detail-modal-note {
+  margin: -4px 0 2px;
+  font-size: 13px;
+}
+
+.folder-notebook-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+.folder-notebook-grid .workspace-item__link {
+  height: 148px;
+}
+
+.folder-detail-timeline {
+  height: min(620px, calc(100vh - 146px));
+}
+
+@media (max-width: 980px) {
+  .folder-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .folder-notebook-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .folder-detail-timeline {
+      height: auto;
+      max-height: 520px;
+    }
+}
+
+@media (max-width: 620px) {
+  .folder-detail-page {
+    width: min(100%, calc(100% - 20px));
+    padding-top: 0;
+  }
+
+  .folder-notebook-grid {
+      grid-template-columns: 1fr;
+    }
+}

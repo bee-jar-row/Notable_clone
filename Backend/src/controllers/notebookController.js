@@ -1,4 +1,4 @@
-const Notebook = require('../models/notebookModel');
+const Notebook = require('../repositories/notebookRepository');
 
 class NotebookController {
   // Get all notebooks for the logged-in user
@@ -29,11 +29,11 @@ class NotebookController {
   static update(req, res) {
     try {
       const { title, folder_id } = req.body;
-      const notebook = Notebook.findById(req.params.id);
+      const notebook = Notebook.findByIdAndUser(req.params.id, req.userId);
       if (!notebook) {
         return res.status(404).json({ message: 'Notebook not found!' });
       }
-      Notebook.update(req.params.id, title, folder_id || null);
+      Notebook.update(req.params.id, req.userId, title, folder_id || null);
       res.json({ message: 'Notebook updated!' });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
@@ -43,11 +43,11 @@ class NotebookController {
   // Delete a notebook
   static delete(req, res) {
     try {
-      const notebook = Notebook.findById(req.params.id);
+      const notebook = Notebook.findByIdAndUser(req.params.id, req.userId);
       if (!notebook) {
         return res.status(404).json({ message: 'Notebook not found!' });
       }
-      Notebook.delete(req.params.id);
+      Notebook.delete(req.params.id, req.userId);
       res.json({ message: 'Notebook deleted!' });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });

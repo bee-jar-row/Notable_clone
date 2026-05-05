@@ -34,7 +34,11 @@ const todoRules = [
     .withMessage('Academic weight must be between 1 and 10!'),
   body('estimated_effort')
     .isFloat({ min: 1, max: 10 })
-    .withMessage('Estimated effort must be between 1 and 10!')
+    .withMessage('Estimated effort must be between 1 and 10!'),
+  body('folder_id').optional({ nullable: true, checkFalsy: true }).isString(),
+  body('notebook_id').optional({ nullable: true, checkFalsy: true }).isString(),
+  body('reminder_at').optional({ nullable: true, checkFalsy: true }).isISO8601()
+    .withMessage('Invalid reminder format!')
 ];
 
 // Note validation rules

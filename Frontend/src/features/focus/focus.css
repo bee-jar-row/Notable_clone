@@ -1,0 +1,435 @@
+.floating-timer {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 9999;
+  background: #fff;
+  border: 1px solid #E5E5E5;
+  border-radius: 12px;
+  width: min(300px, calc(100vw - 32px));
+  padding: 16px;
+  box-shadow: 0 18px 42px rgba(15,31,44,0.16);
+}
+
+.floating-timer p {
+  margin: 0 0 12px;
+  color: #68768d;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.floating-timer button:last-child {
+  margin-left: 8px;
+}
+
+.floating-timer .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 12px;
+}
+
+.floating-timer .header strong {
+  color: #1A303A;
+  font-size: 14px;
+}
+
+.floating-timer__bar {
+  overflow: hidden;
+  height: 6px;
+  margin-bottom: 12px;
+  border-radius: 999px;
+  background: #F0F0F0;
+}
+
+.floating-timer__bar span {
+  display: block;
+  width: 56%;
+  height: 100%;
+  border-radius: inherit;
+  background: #1A303A;
+  animation: timerPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+  0%, 100% { transform: translateX(-14%); }
+  50% { transform: translateX(88%); }
+}
+
+.focus-timer-widget {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 9998;
+  display: grid;
+  width: min(320px, calc(100vw - 32px));
+  gap: 10px;
+  border: 1px solid #CFCFCD;
+  border-radius: 12px;
+  background: #FFFFFF;
+  padding: 14px;
+  box-shadow: 0 18px 42px rgba(15,31,44,0.16);
+}
+
+.focus-timer-widget.is-expired {
+  border-color: #525250;
+  background: #F1F1F0;
+}
+
+.focus-timer-widget__header,
+.focus-timer-widget__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.focus-timer-widget__header span,
+.focus-timer-widget__meta {
+  color: #68768d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.focus-timer-widget__header strong {
+  color: #1A1A1A;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.focus-timer-widget p {
+  overflow: hidden;
+  margin: 0;
+  color: #1A1A1A;
+  font-size: 14px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.focus-timer-widget__progress,
+.focus-overlay__progress {
+  overflow: hidden;
+  height: 8px;
+  border-radius: 999px;
+  background: #E8E8E6;
+}
+
+.focus-timer-widget__progress span,
+.focus-overlay__progress span {
+  display: block;
+  height: 100%;
+  max-width: 100%;
+  border-radius: inherit;
+  background: #525250;
+}
+
+.focus-timer-widget__actions button {
+  min-height: 34px;
+}
+
+.focus-edit-form {
+  display: grid;
+  gap: 16px;
+}
+
+.focus-prepare-intro {
+  border: 1px solid #D6D6D4;
+  border-radius: 10px;
+  background: #FAFAFA;
+  padding: 12px;
+}
+
+.focus-prepare-intro strong {
+  display: block;
+  color: #1A1A1A;
+  font-size: 15px;
+}
+
+.focus-prepare-intro p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.focus-edit-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(120px, 160px);
+  gap: 14px;
+}
+
+.focus-edit-task-picker {
+  display: grid;
+  gap: 10px;
+}
+
+.focus-edit-task-picker__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.focus-edit-task-picker__header strong {
+  color: #1A1A1A;
+  font-size: 15px;
+}
+
+.focus-edit-task-picker__header span {
+  color: #68768d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.focus-edit-task-list {
+  display: grid;
+  max-height: 280px;
+  gap: 8px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.focus-edit-task {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  border: 1px solid #D6D6D4;
+  border-radius: 10px;
+  background: #FFFFFF;
+  padding: 11px;
+}
+
+.focus-edit-task.is-complete {
+  opacity: 0.7;
+}
+
+.focus-edit-task input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+}
+
+.focus-edit-task strong,
+.focus-edit-task small {
+  display: block;
+}
+
+.focus-edit-task strong {
+  overflow: hidden;
+  color: #1A1A1A;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.focus-edit-task small {
+  margin-top: 3px;
+  color: #68768d;
+  font-size: 12px;
+}
+
+.focus-edit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.focus-overlay {
+  display: grid;
+  gap: 18px;
+}
+
+.focus-overlay__hero {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #D0D0CE;
+  border-radius: 12px;
+  background: #FFFFFF;
+  padding: 20px;
+}
+
+.focus-overlay__hero span {
+  display: block;
+  margin-bottom: 8px;
+  color: #68768d;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.focus-overlay__hero strong {
+  color: #1A1A1A;
+  font-size: 58px;
+  line-height: 1;
+}
+
+.focus-overlay__hero p {
+  margin: 8px 0 0;
+  color: #68768d;
+  font-size: 14px;
+}
+
+.focus-overlay__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.focus-overlay__notice {
+  border: 1px solid #C8C8C6;
+  border-radius: 10px;
+  background: #FFFFFF;
+  padding: 14px;
+}
+
+.focus-overlay__notice strong {
+  color: #1A1A1A;
+}
+
+.focus-overlay__notice p {
+  margin: 6px 0 0;
+  color: #68768d;
+  font-size: 13px;
+}
+
+.focus-overlay__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+  gap: 18px;
+  align-items: start;
+}
+
+.focus-overlay__tasks,
+.focus-overlay__support {
+  display: grid;
+  gap: 10px;
+}
+
+.focus-overlay__session-note {
+  border: 1px solid #D6D6D4;
+  border-radius: 10px;
+  background: #FFFFFF;
+  padding: 14px;
+}
+
+.focus-overlay__session-note strong {
+  color: #1A1A1A;
+  font-size: 14px;
+}
+
+.focus-overlay__session-note p {
+  margin: 6px 0 0;
+  color: #68768d;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.focus-overlay-task {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  border: 1px solid #D6D6D4;
+  border-radius: 10px;
+  background: #FFFFFF;
+  padding: 14px;
+}
+
+.focus-overlay-task.is-complete {
+  opacity: 0.68;
+}
+
+.focus-overlay-task__check {
+  display: inline-grid;
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  place-items: center;
+  border: 2px solid #525250;
+  border-radius: 999px;
+  background: #FFFFFF;
+  color: #525250;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.focus-overlay-task__check.is-complete {
+  background: #525250;
+  color: #FFFFFF;
+}
+
+.focus-overlay-task strong {
+  display: block;
+  color: #1A1A1A;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.focus-overlay-task p {
+  margin: 5px 0 0;
+  color: #68768d;
+  font-size: 13px;
+}
+
+.focus-overlay-task__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.focus-overlay__support > div {
+  border: 1px solid #D6D6D4;
+  border-radius: 10px;
+  background: #FFFFFF;
+  padding: 14px;
+}
+
+.focus-overlay__support h3 {
+  margin: 0 0 10px;
+  color: #1A1A1A;
+  font-size: 15px;
+}
+
+.focus-overlay__support p {
+  overflow: hidden;
+  margin: 7px 0 0;
+  color: #68768d;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 620px) {
+  .focus-timer-widget {
+      right: 12px;
+      bottom: 12px;
+      left: 12px;
+      width: auto;
+    }
+
+    .focus-overlay__hero,
+    .focus-overlay__layout {
+      grid-template-columns: 1fr;
+    }
+
+    .focus-overlay__hero {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .focus-overlay__hero strong {
+      font-size: 44px;
+    }
+
+    .focus-edit-grid {
+      grid-template-columns: 1fr;
+    }
+}
