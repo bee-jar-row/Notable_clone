@@ -89,7 +89,7 @@ function Dashboard() {
               onCompleteTodo={focus.completeTodo}
               onEndFocus={focus.endFocus}
               onOpenFocus={focus.openOverlay}
-              onStartFocus={focus.startFocus}
+              onPrepareFocus={focus.openPrepareFocus}
               progress={focus.progress}
               recommendedBlock={data.recommendedBlock}
               recommendedTodos={data.recommendedTodos}

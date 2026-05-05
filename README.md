@@ -1,6 +1,6 @@
 # Notable
 
-Notable is a local-first study productivity app for organizing notebooks, notes, tasks, resources, and focus sessions. The MVP combines a React/Vite frontend with an Express/SQLite backend and implements the core flow described in the group report: authentication, dashboard, notebook workspace, BHPS task priority, and focus-session recommendations.
+Notable is a local-first study productivity app for organizing folders, notebooks, chapters, notes, tasks, resources, calendar context, and focus sessions. The MVP combines a React/Vite frontend with an Express/SQLite backend and implements the core flow described in the group report: authentication, dashboard workspace, notebook/chapter writing, BHPS task priority, global search, reminders, and editable focus-session recommendations.
 
 Group report: [Notable Group Report](https://docs.google.com/document/d/1MLaiFm2-XS0ueA3eEfL4rn2nbUW_koQJesylkEIdjTQ/edit?usp=sharing)
 
@@ -8,18 +8,20 @@ Group report: [Notable Group Report](https://docs.google.com/document/d/1MLaiFm2
 
 ```text
 Notable/
-├── Backend/      # Express API, SQLite database, auth, tasks, notes, resources
-├── Frontend/     # React + Vite app
+├── Backend/      # Express API, SQLite DB, repositories, services, route modules
+├── Frontend/     # React + Vite app with feature-owned pages/components
+├── docs/         # Refactor maps, API maps, smoke checklists, roadmap
 └── README.md
 ```
 
 ## Tech Stack
 
-- Frontend: React, Vite, React Router, ESLint
+- Frontend: React, Vite, React Router, MDXEditor, ESLint
 - Backend: Node.js, Express, SQLite via better-sqlite3
 - Auth: bcrypt password hashing, JWT bearer tokens
 - Uploads: multer, local `Backend/uploads/`
 - Optional email delivery: nodemailer
+- Optional Google Calendar OAuth/event reads: googleapis
 
 ## Local Setup
 
@@ -48,7 +50,7 @@ FRONTEND_URL=http://127.0.0.1:5173
 EMAIL_USER=
 EMAIL_PASS=
 
-# Optional, not part of the local MVP flow.
+# Optional Google Calendar OAuth skeleton.
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 ```
@@ -85,19 +87,36 @@ http://127.0.0.1:5173
 
 - Register, login, logout, protected dashboard, and local JWT session storage.
 - Password reset flow for local testing. If SMTP credentials are not configured, `/auth/forgot-password` returns a reset token/link in the response.
+- Demo account seeding with rich folders, notebooks, chapters, todos, resources, notes, reminders, and focus data via `cd Backend && npm run seed`.
 - Dynamic dashboard using backend data:
   - profile greeting
-  - folders and notebooks
-  - todos with deadline, academic weight, estimated effort, BHPS score, and priority label
-  - upcoming task timeline
-  - focus-session recommendation and start/end controls
+  - clickable folders and notebooks
+  - todos with ownership, deadline, academic weight, estimated effort, reminders, BHPS score, and priority label
+  - search, filter, sort, reminders, and timeline panels
+  - Your Day calendar panel with Google Calendar embed fallback
+  - global command search across workspace, tasks, notes, chapters, and resources
+  - BHPS focus recommendations and editable global focus timer
 - Notebook detail route at `/notebook/:id`:
-  - chapter list from backend
+  - chapter list from backend with delete/edit actions
   - chapter search
-  - create chapter
+  - create chapter and continue writing in the full editor
   - create quick note linked optionally to a todo
   - upload resource to notebook/chapter
   - download resource
+- Folder detail route at `/folder/:id`:
+  - notebook list in that folder
+  - folder-related task timeline
+  - create notebook directly inside the folder
+- Chapter detail/editor route at `/notebook/:notebookId/chapter/:chapterId/edit`:
+  - rich Markdown editor with toolbar
+  - rendered Markdown reading pane
+  - linked resources
+- Focus Session:
+  - recommended study block from BHPS-ranked tasks
+  - global countdown widget across protected pages
+  - full focus overlay
+  - editable active session title, notes, duration, and task list
+  - end-session summary
 - Backend ownership checks prevent users from updating/deleting/downloading another user's data.
 - SQLite schema is created idempotently on startup, so a fresh local database can boot without manual migration.
 
@@ -110,6 +129,7 @@ npm run dev      # Start Vite dev server
 npm run build    # Build production frontend
 npm run lint     # Run ESLint
 npm run preview  # Preview production build
+npm run smoke    # Run lint + build
 ```
 
 Backend:
@@ -117,6 +137,8 @@ Backend:
 ```bash
 npm start        # Start Express with node
 npm run dev      # Start Express with nodemon
+npm run seed     # Reset/seed demo data
+npm run smoke    # Require DB/repositories/routes and print route map
 ```
 
 ## Backend API
@@ -146,6 +168,7 @@ Authorization: Bearer <token>
 | --- | --- | --- |
 | `GET` | `/user/profile` | Get safe current-user profile |
 | `PATCH` | `/user/profile` | Update profile name/display name |
+| `PATCH` | `/user/password` | Change current-user password |
 | `GET` | `/folders` | List folders |
 | `POST` | `/folders` | Create folder |
 | `PATCH` | `/folders/:id` | Update folder |
@@ -175,10 +198,14 @@ Authorization: Bearer <token>
 | `GET` | `/resources/:id/download` | Download resource |
 | `DELETE` | `/resources/:id` | Delete resource |
 | `GET` | `/focus-sessions` | List focus sessions |
-| `GET` | `/focus-sessions/recommended` | Recommend incomplete todos by BHPS |
+| `GET` | `/focus-sessions/recommended` | Recommend incomplete todos and a BHPS study block |
 | `POST` | `/focus-sessions` | Start focus session |
+| `PATCH` | `/focus-sessions/:id` | Edit an active focus session title, notes, duration, and task list |
 | `PATCH` | `/focus-sessions/:id/end` | End focus session |
 | `GET` | `/focus-sessions/:id/summary` | Get focus session summary |
+| `GET` | `/search?q=...` | Global grouped search with BHPS recommendations |
+| `GET` | `/calendar/auth` | Generate Google Calendar OAuth URL |
+| `GET` | `/calendar/events` | Fetch Google Calendar events using provided tokens |
 
 ## Example API Calls
 
@@ -216,7 +243,23 @@ curl -X POST http://localhost:3000/api/todos \
     "title": "Review Chapter 3",
     "deadline": "2026-05-25",
     "academic_weight": 8,
-    "estimated_effort": 4
+    "estimated_effort": 4,
+    "notebook_id": "<notebook-id>",
+    "reminder_at": "2026-05-24T08:00:00.000Z"
+  }'
+```
+
+Edit an active focus session:
+
+```bash
+curl -X PATCH http://localhost:3000/api/focus-sessions/<session-id> \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{
+    "title": "Thesis writing block",
+    "session_notes": "Stay on Chapter 3 and finish the draft pass.",
+    "duration_minutes": 45,
+    "todo_ids": ["<todo-id-1>", "<todo-id-2>"]
   }'
 ```
 
@@ -234,19 +277,15 @@ Backend smoke check:
 
 ```bash
 cd Backend
-npm start
+npm run smoke
 ```
 
-Then in another terminal:
+Optional API health check:
 
 ```bash
+cd Backend
+npm start
 curl http://localhost:3000/
-```
-
-Expected response:
-
-```json
-{"message":"Notable Backend is running!"}
 ```
 
 ## Local Data Notes
@@ -254,3 +293,5 @@ Expected response:
 - SQLite data is stored in `Backend/database/notable.db`.
 - Uploaded files are stored in `Backend/uploads/`.
 - These local runtime artifacts may change during manual testing.
+- `Backend/database/notable.db` may change when schema bootstrap adds nullable columns during smoke/dev runs.
+- Chapter content is stored as Markdown text in `chapters.content`.

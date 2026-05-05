@@ -15,6 +15,13 @@ export function startFocusSession(payload) {
   })
 }
 
+export function updateFocusSession(sessionId, payload) {
+  return apiRequest(`/focus-sessions/${sessionId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  })
+}
+
 export function endFocusSession(sessionId) {
   return apiRequest(`/focus-sessions/${sessionId}/end`, { method: 'PATCH' })
 }
@@ -29,4 +36,8 @@ export function getFocusNotes() {
 
 export function getFocusResources() {
   return apiRequest('/resources')
+}
+
+export function getFocusTodoCandidates() {
+  return apiRequest('/todos?limit=100')
 }

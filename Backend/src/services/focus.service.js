@@ -34,6 +34,47 @@ function uniqueById(items) {
   });
 }
 
+function resolveDurationMinutes(value, fallback = 50) {
+  const duration = Number(value || fallback);
+  if (!Number.isInteger(duration) || duration < 5 || duration > 180) {
+    return {
+      error: {
+        status: 400,
+        body: { message: 'Focus duration must be between 5 and 180 minutes.' }
+      }
+    };
+  }
+
+  return { duration };
+}
+
+function normalizeTodoIds(todoIds) {
+  if (!Array.isArray(todoIds)) return [];
+  return [...new Set(todoIds.filter(Boolean).map((todoId) => String(todoId)))];
+}
+
+function validateTodoIds(userId, todoIds) {
+  const validTodos = todoIds.every(todoId => Todo.findByIdAndUser(todoId, userId));
+  if (!validTodos) {
+    return {
+      status: 400,
+      body: { message: 'One or more todos were not found!' }
+    };
+  }
+
+  return null;
+}
+
+function buildSessionPayload(sessionId, userId) {
+  const session = FocusSession.findByIdAndUser(sessionId, userId);
+  if (!session) return null;
+
+  return {
+    ...session,
+    todos: BHPSLogic.rankTodos(FocusSession.getSessionTodos(sessionId))
+  };
+}
+
 function buildRecommendedBlock(userId, rankedTodos) {
   const topTodo = rankedTodos[0];
   if (!topTodo) return null;
@@ -181,17 +222,19 @@ function buildFocusSummary(sessionId, userId) {
 
 class FocusService {
   static start(userId, body) {
-    const { duration_minutes } = body;
-    const todoIds = Array.isArray(body.todo_ids) ? body.todo_ids : [];
+    const durationResult = resolveDurationMinutes(body.duration_minutes);
+    if (durationResult.error) return durationResult.error;
 
-    if (todoIds.length > 0) {
-      const validTodos = todoIds.every(todoId => Todo.findByIdAndUser(todoId, userId));
-      if (!validTodos) {
-        return { status: 400, body: { message: 'One or more todos were not found!' } };
-      }
-    }
+    const todoIds = normalizeTodoIds(body.todo_ids);
+    const todoError = validateTodoIds(userId, todoIds);
+    if (todoError) return todoError;
 
-    const sessionId = FocusSession.create(userId, duration_minutes || 50);
+    const sessionId = FocusSession.create(
+      userId,
+      durationResult.duration,
+      body.title || null,
+      body.session_notes || null
+    );
 
     if (todoIds.length > 0) {
       todoIds.forEach(todoId => {
@@ -204,7 +247,39 @@ class FocusService {
       body: {
         message: 'Focus session started!',
         sessionId,
-        duration_minutes: duration_minutes || 50
+        duration_minutes: durationResult.duration
+      }
+    };
+  }
+
+  static update(userId, sessionId, body) {
+    const session = FocusSession.findByIdAndUser(sessionId, userId);
+    if (!session) {
+      return { status: 404, body: { message: 'Session not found!' } };
+    }
+
+    if (session.is_completed === 1) {
+      return { status: 400, body: { message: 'Completed focus sessions cannot be edited.' } };
+    }
+
+    const durationResult = resolveDurationMinutes(body.duration_minutes, Number(session.duration_minutes) || 50);
+    if (durationResult.error) return durationResult.error;
+
+    const todoIds = normalizeTodoIds(body.todo_ids);
+    const todoError = validateTodoIds(userId, todoIds);
+    if (todoError) return todoError;
+
+    FocusSession.updateWithTodos(sessionId, userId, {
+      durationMinutes: durationResult.duration,
+      title: body.title || null,
+      sessionNotes: body.session_notes || null
+    }, todoIds);
+
+    return {
+      status: 200,
+      body: {
+        message: 'Focus session updated!',
+        session: buildSessionPayload(sessionId, userId)
       }
     };
   }

@@ -15,7 +15,7 @@ function TimelinePanel({ onCompleteTodo, onDeleteTodo, onOpenModal, todos }) {
   return (
     <aside className="dashboard-panel dashboard-panel--timeline">
       <div className="dashboard-panel__header">
-        <h2>Timeline</h2>
+        <h2>All To Do</h2>
         <button
           aria-label="Create todo"
           className="plus-btn dashboard-panel__plus"

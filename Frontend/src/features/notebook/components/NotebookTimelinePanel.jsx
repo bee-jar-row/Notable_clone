@@ -1,21 +1,40 @@
 import { formatTime } from '../../../utils/date'
+import { NOTEBOOK_MODAL } from '../hooks/useNotebook'
 
 function NotebookTimelinePanel({
   groupedTodos,
   notebookTitle,
   onCompleteTodo,
   onDeleteTodo,
+  onOpenModal,
 }) {
   const groups = Object.entries(groupedTodos)
 
   return (
     <div className="notebook-panel">
       <div className="notebook-panel-header">
-        <h2>Timeline</h2>
+        <h2>To Do</h2>
+        <button
+          aria-label="Add task to this notebook"
+          className="plus-btn"
+          onClick={() => onOpenModal(NOTEBOOK_MODAL.TODO)}
+          type="button"
+        >
+          +
+        </button>
       </div>
 
       {groups.length === 0 ? (
-        <p className="muted notebook-panel__empty">No tasks.</p>
+        <div className="notebook-panel__empty notebook-panel__empty--action">
+          <p className="muted">No tasks yet.</p>
+          <button
+            className="ghost-button ghost-button--small"
+            onClick={() => onOpenModal(NOTEBOOK_MODAL.TODO)}
+            type="button"
+          >
+            Add Task
+          </button>
+        </div>
       ) : (
         <div className="notebook-panel__scroller">
           {groups.map(([date, todos]) => (

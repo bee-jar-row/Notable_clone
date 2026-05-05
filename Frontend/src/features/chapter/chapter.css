@@ -1,8 +1,10 @@
 .chapter-detail-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+  width: min(100%, 1180px);
+  grid-template-columns: 1fr;
   gap: 24px;
   align-items: start;
+  margin: 0 auto;
 }
 
 .chapter-reader,
@@ -14,6 +16,11 @@
 
 .chapter-reader {
   padding: 28px;
+}
+
+.chapter-editor-panel {
+  overflow: hidden;
+  min-width: 0;
 }
 
 .chapter-reader__meta {
@@ -39,41 +46,252 @@
   line-height: 1.7;
 }
 
-.chapter-reader__content p {
-  margin: 0 0 14px;
-}
-
-.chapter-linked-resources {
+.chapter-linked-resources,
+.chapter-related-notes {
   margin-top: 28px;
   padding-top: 20px;
   border-top: 1px solid #E5E5E5;
 }
 
-.chapter-linked-resources h3 {
-  margin: 0 0 12px;
+.chapter-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.chapter-section-header h3 {
+  margin: 0;
   color: #1A303A;
   font-size: 16px;
 }
 
-.chapter-editor-panel {
+.chapter-resource-upload {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+  margin-bottom: 14px;
+}
+
+.chapter-resource-upload__field {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  color: #4F4F4D;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.chapter-resource-upload .auth-form-input {
+  margin: 0;
+  min-width: 0;
+}
+
+.chapter-resource-upload .ghost-button {
+  min-height: 40px;
+  padding: 9px 14px;
+  border-radius: 6px;
+  font-weight: 800;
+}
+
+.chapter-note-list {
+  display: grid;
+  gap: 10px;
+}
+
+.chapter-note-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  background: #FFFFFF;
+  padding: 12px;
+}
+
+.chapter-note-card h4 {
   overflow: hidden;
+  margin: 0 0 6px;
+  color: #1A1A1A;
+  font-size: 14px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chapter-note-card p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: #4F4F4D;
+  font-size: 13px;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.chapter-note-card span {
+  max-width: 150px;
+  overflow: hidden;
+  border: 1px solid #D6D6D4;
+  border-radius: 999px;
+  color: #68768d;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chapter-editor-form {
   display: grid;
   gap: 12px;
-  padding: 20px;
+  padding: 24px;
+  min-width: 0;
 }
 
 .chapter-editor-form .auth-form-label,
 .chapter-editor-form .auth-form-input,
 .chapter-editor-form .auth-submit-btn {
   margin: 0;
+  min-width: 0;
 }
 
-@media (max-width: 980px) {
-  .chapter-detail-layout {
-    grid-template-columns: 1fr;
+.chapter-editor-form .auth-submit-btn {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.markdown-editor {
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid #A7A7A5;
+  border-radius: 10px;
+  background: #FFFFFF;
+}
+
+.markdown-editor .mdxeditor-toolbar {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom: 1px solid #D6D6D4;
+  background: #F4F4F3;
+  scrollbar-width: thin;
+}
+
+.markdown-editor .mdxeditor-toolbar button,
+.markdown-editor .mdxeditor-toolbar [role='button'] {
+  color: #4F4F4D;
+}
+
+.markdown-editor__content {
+  min-height: 340px;
+  max-height: min(58vh, 680px);
+  overflow: auto;
+  padding: 18px;
+  color: #1A1A1A;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.chapter-modal-markdown-editor .markdown-editor__content {
+  min-height: 240px;
+  max-height: min(42vh, 360px);
+  overflow: auto;
+}
+
+.chapter-markdown-editor .markdown-editor__content {
+  min-height: 520px;
+}
+
+.chapter-modal-form {
+  min-width: 0;
+}
+
+.chapter-modal-form .auth-form-label {
+  min-width: 0;
+}
+
+.chapter-modal-form .auth-submit-btn {
+  overflow: hidden;
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.markdown-editor--readonly {
+  border: 0;
+  background: transparent;
+}
+
+.markdown-editor--readonly .markdown-editor__content {
+  min-height: 0;
+  padding: 0;
+}
+
+.markdown-preview-shell {
+  border: 1px solid #D6D6D4;
+  border-radius: 10px;
+  background: #FFFFFF;
+  padding: 18px;
+}
+
+.markdown-editor__content h1,
+.markdown-editor__content h2,
+.markdown-editor__content h3 {
+  margin: 0.8em 0 0.35em;
+  color: #1A1A1A;
+  line-height: 1.2;
+}
+
+.markdown-editor__content p,
+.markdown-editor__content ul,
+.markdown-editor__content ol,
+.markdown-editor__content blockquote,
+.markdown-editor__content pre,
+.markdown-editor__content table {
+  margin: 0 0 1em;
+}
+
+.markdown-editor__content blockquote {
+  border-left: 3px solid #6F6F6D;
+  color: #4F4F4D;
+  padding-left: 12px;
+}
+
+.markdown-editor__content code {
+  border-radius: 4px;
+  background: #EFEFEF;
+  padding: 2px 4px;
+}
+
+.markdown-editor__content pre {
+  overflow: auto;
+  border-radius: 8px;
+  background: #EFEFEF;
+  padding: 12px;
+}
+
+.markdown-editor__content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.markdown-editor__content th,
+.markdown-editor__content td {
+  border: 1px solid #D6D6D4;
+  padding: 8px;
+  text-align: left;
+}
+
+@media (max-width: 1180px) {
+  .chapter-markdown-editor .markdown-editor__content {
+    min-height: 380px;
   }
 }
 
@@ -84,10 +302,20 @@
   }
 
   .chapter-reader {
-      padding: 20px;
-    }
+    padding: 20px;
+  }
 
-    .chapter-reader h2 {
-      font-size: 28px;
-    }
+  .chapter-reader h2 {
+    font-size: 28px;
+  }
+
+  .chapter-resource-upload,
+  .chapter-note-card {
+    grid-template-columns: 1fr;
+  }
+
+  .chapter-note-card span {
+    max-width: 100%;
+    width: fit-content;
+  }
 }

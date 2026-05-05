@@ -8,9 +8,11 @@ import {
   getFocusNotes,
   getFocusResources,
   getFocusSessions,
+  getFocusTodoCandidates,
   startFocusSession,
 } from './focus.api'
 import FocusSessionOverlay from './FocusSessionOverlay'
+import FocusSessionPrepareModal from './FocusSessionPrepareModal'
 import FocusTimerWidget from './FocusTimerWidget'
 
 const FocusSessionContext = createContext(null)
@@ -72,9 +74,12 @@ function getSupportContext(activeSession, notes, resources) {
 export function FocusSessionProvider({ children }) {
   const auth = useAuth()
   const [activeSession, setActiveSession] = useState(null)
+  const [availableTodos, setAvailableTodos] = useState([])
   const [supportContext, setSupportContext] = useState({ notes: [], resources: [] })
   const [lastFocusSummary, setLastFocusSummary] = useState(null)
   const [isOverlayOpen, setIsOverlayOpen] = useState(false)
+  const [isPrepareOpen, setIsPrepareOpen] = useState(false)
+  const [prepareDraft, setPrepareDraft] = useState(null)
   const [isLoadingFocus, setIsLoadingFocus] = useState(false)
   const [focusError, setFocusError] = useState('')
   const [nowMs, setNowMs] = useState(() => Date.now())
@@ -82,29 +87,37 @@ export function FocusSessionProvider({ children }) {
   const refreshFocus = useCallback(async () => {
     if (!auth.isAuthenticated) {
       setActiveSession(null)
+      setAvailableTodos([])
       setSupportContext({ notes: [], resources: [] })
       setIsOverlayOpen(false)
+      setIsPrepareOpen(false)
+      setPrepareDraft(null)
       return null
     }
 
     setFocusError('')
     setIsLoadingFocus(true)
     try {
-      const [sessionsData, notesData, resourcesData] = await Promise.all([
+      const [sessionsData, notesData, resourcesData, todosData] = await Promise.all([
         getFocusSessions(),
         getFocusNotes(),
         getFocusResources(),
+        getFocusTodoCandidates(),
       ])
       const nextActiveSession = (sessionsData.sessions || []).find((session) => session.is_completed === 0) || null
 
       setActiveSession(nextActiveSession)
+      setAvailableTodos(todosData.todos || [])
       setSupportContext(getSupportContext(
         nextActiveSession,
         notesData.notes || [],
         resourcesData.resources || [],
       ))
 
-      if (!nextActiveSession) {
+      if (nextActiveSession) {
+        setIsPrepareOpen(false)
+        setPrepareDraft(null)
+      } else {
         setIsOverlayOpen(false)
       }
 
@@ -151,7 +164,7 @@ export function FocusSessionProvider({ children }) {
 
   const timing = useMemo(() => getFocusTiming(activeSession, nowMs), [activeSession, nowMs])
 
-  const startFocus = useCallback(async (todoIds) => {
+  const startFocus = useCallback(async (todoIds, options = {}) => {
     const normalizedTodoIds = Array.isArray(todoIds)
       ? todoIds.filter(Boolean)
       : todoIds
@@ -161,13 +174,26 @@ export function FocusSessionProvider({ children }) {
     setFocusError('')
     setLastFocusSummary(null)
     try {
-      await startFocusSession({ duration_minutes: 50, todo_ids: normalizedTodoIds })
+      await startFocusSession({
+        duration_minutes: options.duration_minutes || 50,
+        session_notes: options.session_notes || '',
+        title: options.title || '',
+        todo_ids: normalizedTodoIds,
+      })
       await refreshFocus()
+      setIsPrepareOpen(false)
+      setPrepareDraft(null)
       setIsOverlayOpen(true)
     } catch (err) {
       setFocusError(err.message)
+      throw err
     }
   }, [refreshFocus])
+
+  const openPrepareFocus = useCallback((draft) => {
+    setPrepareDraft(draft || null)
+    setIsPrepareOpen(true)
+  }, [])
 
   const completeTodo = useCallback(async (todoId) => {
     setFocusError('')
@@ -196,26 +222,35 @@ export function FocusSessionProvider({ children }) {
   const value = useMemo(() => ({
     ...timing,
     activeSession,
+    availableTodos,
     clearFocusSummary: () => setLastFocusSummary(null),
     closeOverlay: () => setIsOverlayOpen(false),
+    closePrepareFocus: () => setIsPrepareOpen(false),
     completeTodo,
     endFocus,
     focusError,
     isLoadingFocus,
     isOverlayOpen,
+    isPrepareOpen,
     lastFocusSummary,
     openOverlay: () => setIsOverlayOpen(true),
+    openPrepareFocus,
+    prepareDraft,
     refreshFocus,
     startFocus,
     supportContext,
   }), [
     activeSession,
+    availableTodos,
     completeTodo,
     endFocus,
     focusError,
     isLoadingFocus,
     isOverlayOpen,
+    isPrepareOpen,
     lastFocusSummary,
+    openPrepareFocus,
+    prepareDraft,
     refreshFocus,
     startFocus,
     supportContext,
@@ -226,6 +261,16 @@ export function FocusSessionProvider({ children }) {
     <FocusSessionContext.Provider value={value}>
       {children}
       {auth.isAuthenticated && activeSession && <FocusTimerWidget />}
+      {auth.isAuthenticated && (
+        <FocusSessionPrepareModal
+          availableTodos={availableTodos}
+          draft={prepareDraft}
+          isOpen={isPrepareOpen}
+          key={`${prepareDraft?.title || 'prepare'}-${isPrepareOpen ? 'open' : 'closed'}`}
+          onClose={() => setIsPrepareOpen(false)}
+          onSubmit={(payload) => startFocus(payload.todo_ids, payload)}
+        />
+      )}
       {auth.isAuthenticated && <FocusSessionOverlay />}
       {auth.isAuthenticated && (
         <FocusSummaryModal

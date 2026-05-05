@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import FeedbackBanner from '../../../shared/components/ui/FeedbackBanner'
 import ChapterList from '../components/ChapterList'
@@ -16,11 +16,16 @@ function Notebook() {
   const fromFolder = location.state?.fromFolder || null
   const backTo = fromFolder?.id ? `/folder/${fromFolder.id}` : '/dashboard'
   const backLabel = fromFolder?.title || 'Dashboard'
-  const notebookState = fromFolder ? { fromFolder } : { fromDashboard: true }
+  const notebookState = useMemo(() => (
+    fromFolder ? { fromFolder } : { fromDashboard: true }
+  ), [fromFolder])
   const onMissingNotebook = useCallback(() => {
     navigate('/dashboard', { replace: true })
   }, [navigate])
-  const notebook = useNotebook({ id, onMissingNotebook })
+  const onChapterCreated = useCallback((chapterId) => {
+    navigate(`/notebook/${id}/chapter/${chapterId}/edit`, { state: notebookState })
+  }, [id, navigate, notebookState])
+  const notebook = useNotebook({ id, onChapterCreated, onMissingNotebook })
   const {
     activeModal,
     chapterForm,
@@ -46,9 +51,12 @@ function Notebook() {
     setNoteForm,
     setResourceForm,
     setSearch,
+    setTodoForm,
     submitChapter,
     submitNote,
     submitResource,
+    submitTodo,
+    todoForm,
     todos,
   } = notebook
 
@@ -77,6 +85,7 @@ function Notebook() {
               notebookTitle={notebookData?.title}
               onCompleteTodo={completeTodo}
               onDeleteTodo={deleteTodo}
+              onOpenModal={openModal}
             />
             <NotesPanel
               notes={notes}
@@ -112,7 +121,10 @@ function Notebook() {
         onSubmitChapter={submitChapter}
         onSubmitNote={submitNote}
         onSubmitResource={submitResource}
+        onSubmitTodo={submitTodo}
+        onTodoFormChange={setTodoForm}
         resourceForm={resourceForm}
+        todoForm={todoForm}
         todos={todos}
       />
     </div>

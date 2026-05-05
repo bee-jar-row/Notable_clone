@@ -1,6 +1,6 @@
 import Modal from '../../shared/components/ui/Modal'
 import { formatTime } from '../../utils/date'
-import { formatBhpsScore, getFocusCue, getLoadMeta, getPriorityMeta } from '../../utils/priority'
+import { getFocusCue } from '../../utils/priority'
 import { formatCountdown, useFocusSession } from './FocusSessionContext'
 
 function FocusSessionOverlay() {
@@ -34,7 +34,7 @@ function FocusSessionOverlay() {
           <div>
             <span>{isExpired ? "Time's up" : 'Now focusing'}</span>
             <strong>{formatCountdown(remainingSeconds)}</strong>
-            <p>{completedCount} of {todos.length} tasks complete</p>
+            <p>{activeSession.title || 'Focus block'} / {completedCount} of {todos.length} tasks complete</p>
           </div>
           <div className="focus-overlay__actions">
             <button className="ghost-button" onClick={closeOverlay} type="button">
@@ -59,9 +59,13 @@ function FocusSessionOverlay() {
 
         <div className="focus-overlay__layout">
           <div className="focus-overlay__tasks" aria-label="Focus session tasks">
+            {activeSession.session_notes && (
+              <div className="focus-overlay__session-note">
+                <strong>Session note</strong>
+                <p>{activeSession.session_notes}</p>
+              </div>
+            )}
             {todos.map((todo, index) => {
-              const priority = getPriorityMeta(todo)
-              const load = getLoadMeta(todo)
               const isComplete = todo.is_completed === 1
 
               return (
@@ -78,12 +82,6 @@ function FocusSessionOverlay() {
                   <div>
                     <strong>{todo.title}</strong>
                     <p>{formatTime(todo.deadline)} / {getFocusCue(todo)}</p>
-                    <div className="focus-overlay-task__badges">
-                      <span className={`priority-badge priority-badge--${priority.tone}`}>
-                        {priority.label} {formatBhpsScore(todo)}
-                      </span>
-                      <span className={`load-badge load-badge--${load.tone}`}>{load.label}</span>
-                    </div>
                   </div>
                 </article>
               )

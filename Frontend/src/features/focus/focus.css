@@ -129,6 +129,114 @@
   min-height: 34px;
 }
 
+.focus-edit-form {
+  display: grid;
+  gap: 16px;
+}
+
+.focus-prepare-intro {
+  border: 1px solid #D6D6D4;
+  border-radius: 10px;
+  background: #FAFAFA;
+  padding: 12px;
+}
+
+.focus-prepare-intro strong {
+  display: block;
+  color: #1A1A1A;
+  font-size: 15px;
+}
+
+.focus-prepare-intro p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.focus-edit-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(120px, 160px);
+  gap: 14px;
+}
+
+.focus-edit-task-picker {
+  display: grid;
+  gap: 10px;
+}
+
+.focus-edit-task-picker__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.focus-edit-task-picker__header strong {
+  color: #1A1A1A;
+  font-size: 15px;
+}
+
+.focus-edit-task-picker__header span {
+  color: #68768d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.focus-edit-task-list {
+  display: grid;
+  max-height: 280px;
+  gap: 8px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.focus-edit-task {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  border: 1px solid #D6D6D4;
+  border-radius: 10px;
+  background: #FFFFFF;
+  padding: 11px;
+}
+
+.focus-edit-task.is-complete {
+  opacity: 0.7;
+}
+
+.focus-edit-task input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+}
+
+.focus-edit-task strong,
+.focus-edit-task small {
+  display: block;
+}
+
+.focus-edit-task strong {
+  overflow: hidden;
+  color: #1A1A1A;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.focus-edit-task small {
+  margin-top: 3px;
+  color: #68768d;
+  font-size: 12px;
+}
+
+.focus-edit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
 .focus-overlay {
   display: grid;
   gap: 18px;
@@ -201,6 +309,25 @@
 .focus-overlay__support {
   display: grid;
   gap: 10px;
+}
+
+.focus-overlay__session-note {
+  border: 1px solid #D6D6D4;
+  border-radius: 10px;
+  background: #FFFFFF;
+  padding: 14px;
+}
+
+.focus-overlay__session-note strong {
+  color: #1A1A1A;
+  font-size: 14px;
+}
+
+.focus-overlay__session-note p {
+  margin: 6px 0 0;
+  color: #68768d;
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 .focus-overlay-task {
@@ -300,5 +427,9 @@
 
     .focus-overlay__hero strong {
       font-size: 44px;
+    }
+
+    .focus-edit-grid {
+      grid-template-columns: 1fr;
     }
 }

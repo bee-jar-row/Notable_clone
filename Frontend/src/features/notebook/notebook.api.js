@@ -49,6 +49,13 @@ export function getTodos(query = '') {
   return apiRequest(`/todos${query}`)
 }
 
+export function createTodo(payload) {
+  return apiRequest('/todos', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
 export function completeTodo(todoId) {
   return apiRequest(`/todos/${todoId}/complete`, { method: 'PATCH' })
 }

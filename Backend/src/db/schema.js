@@ -97,6 +97,8 @@ function initializeSchema(db) {
     CREATE TABLE IF NOT EXISTS focus_sessions (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
+      title TEXT,
+      session_notes TEXT,
       duration_minutes INTEGER DEFAULT 50,
       started_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       ended_at DATETIME,
@@ -120,6 +122,8 @@ function initializeSchema(db) {
   ensureColumn(db, 'todos', 'folder_id', 'TEXT');
   ensureColumn(db, 'todos', 'notebook_id', 'TEXT');
   ensureColumn(db, 'todos', 'reminder_at', 'DATETIME');
+  ensureColumn(db, 'focus_sessions', 'title', 'TEXT');
+  ensureColumn(db, 'focus_sessions', 'session_notes', 'TEXT');
 }
 
 module.exports = {

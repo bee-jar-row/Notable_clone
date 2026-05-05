@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { formatDateGroup } from '../../../utils/date'
+import { getDefaultReminderAt, toIsoOrNull } from '../../../utils/reminders'
 import {
   completeTodo as completeTodoRequest,
   createChapter,
   createNote,
+  createTodo,
   deleteChapter as deleteChapterRequest,
   deleteTodo as deleteTodoRequest,
   downloadNotebookResource,
@@ -18,11 +20,19 @@ import {
 const EMPTY_CHAPTER_FORM = { title: '', content: '' }
 const EMPTY_NOTE_FORM = { title: '', content: '', todo_id: '' }
 const EMPTY_RESOURCE_FORM = { file: null, chapter_id: '' }
+const EMPTY_TODO_FORM = {
+  title: '',
+  deadline: '',
+  reminder_at: '',
+  academic_weight: '5',
+  estimated_effort: '3',
+}
 
 export const NOTEBOOK_MODAL = {
   CHAPTER: 'chapter',
   NOTE: 'note',
   RESOURCE: 'resource',
+  TODO: 'todo',
 }
 
 function groupTodosByDate(todos) {
@@ -34,7 +44,7 @@ function groupTodosByDate(todos) {
   }, {})
 }
 
-export function useNotebook({ id, onMissingNotebook }) {
+export function useNotebook({ id, onChapterCreated, onMissingNotebook }) {
   const [notebook, setNotebook] = useState(null)
   const [chapters, setChapters] = useState([])
   const [resources, setResources] = useState([])
@@ -44,6 +54,7 @@ export function useNotebook({ id, onMissingNotebook }) {
   const [chapterForm, setChapterForm] = useState(EMPTY_CHAPTER_FORM)
   const [noteForm, setNoteForm] = useState(EMPTY_NOTE_FORM)
   const [resourceForm, setResourceForm] = useState(EMPTY_RESOURCE_FORM)
+  const [todoForm, setTodoForm] = useState(EMPTY_TODO_FORM)
   const [activeModal, setActiveModal] = useState(null)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
@@ -104,12 +115,14 @@ export function useNotebook({ id, onMissingNotebook }) {
     setError('')
     setMessage('')
     try {
-      await mutation()
-      afterSuccess?.()
+      const result = await mutation()
+      afterSuccess?.(result)
       setMessage(successMessage)
       await loadNotebook()
+      return result
     } catch (err) {
       setError(err.message)
+      return null
     }
   }, [loadNotebook])
 
@@ -118,15 +131,21 @@ export function useNotebook({ id, onMissingNotebook }) {
 
   const submitChapter = useCallback((event) => {
     event.preventDefault()
-    return runMutation(
-      () => createChapter(id, chapterForm),
-      'Chapter created.',
-      () => {
+    setError('')
+    setMessage('')
+
+    return createChapter(id, chapterForm)
+      .then(async (result) => {
         setChapterForm(EMPTY_CHAPTER_FORM)
         closeModal()
-      },
-    )
-  }, [chapterForm, closeModal, id, runMutation])
+        setMessage('Chapter created.')
+        await loadNotebook()
+        if (result?.chapterId) {
+          onChapterCreated?.(result.chapterId)
+        }
+      })
+      .catch((err) => setError(err.message))
+  }, [chapterForm, closeModal, id, loadNotebook, onChapterCreated])
 
   const submitNote = useCallback((event) => {
     event.preventDefault()
@@ -167,6 +186,26 @@ export function useNotebook({ id, onMissingNotebook }) {
       },
     )
   }, [closeModal, id, resourceForm, runMutation])
+
+  const submitTodo = useCallback((event) => {
+    event.preventDefault()
+    return runMutation(
+      () => createTodo({
+        title: todoForm.title,
+        deadline: todoForm.deadline,
+        folder_id: null,
+        notebook_id: id,
+        academic_weight: Number(todoForm.academic_weight),
+        estimated_effort: Number(todoForm.estimated_effort),
+        reminder_at: toIsoOrNull(todoForm.reminder_at) || toIsoOrNull(getDefaultReminderAt(todoForm.deadline)),
+      }),
+      'Todo created.',
+      () => {
+        setTodoForm(EMPTY_TODO_FORM)
+        closeModal()
+      },
+    )
+  }, [closeModal, id, runMutation, todoForm])
 
   const download = useCallback(async (resource) => {
     setError('')
@@ -225,9 +264,12 @@ export function useNotebook({ id, onMissingNotebook }) {
     setNoteForm,
     setResourceForm,
     setSearch,
+    setTodoForm,
     submitChapter,
     submitNote,
     submitResource,
+    submitTodo,
+    todoForm,
     todos,
   }
 }

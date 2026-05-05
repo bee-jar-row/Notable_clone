@@ -8,7 +8,7 @@ function FocusPanel({
   onCompleteTodo,
   onEndFocus,
   onOpenFocus,
-  onStartFocus,
+  onPrepareFocus,
   progress,
   recommendedBlock,
   recommendedTodos,
@@ -21,7 +21,6 @@ function FocusPanel({
   const topPriority = topTodo ? getPriorityMeta(topTodo) : null
   const topLoad = topTodo ? getLoadMeta(topTodo) : null
   const sessionTodos = activeSession?.todos || []
-  const startTodoIds = blockTodos.map((todo) => todo.id).filter(Boolean)
   const startedAt = activeSession
     ? new Date(activeSession.started_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     : null
@@ -38,7 +37,7 @@ function FocusPanel({
               <div className={isExpired ? 'focus-panel-timer is-expired' : 'focus-panel-timer'}>
                 <span>{isExpired ? "Time's up" : 'Active block'}</span>
                 <strong>{formatCountdown(remainingSeconds)}</strong>
-                <p>Started at {startedAt}. Keep this block contained and finish one step at a time.</p>
+                <p>{activeSession.title || `Started at ${startedAt}`}. Finish one step at a time.</p>
                 <div className="focus-panel-timer__bar" aria-hidden="true">
                   <span style={{ width: `${progressPercent}%` }} />
                 </div>
@@ -46,7 +45,6 @@ function FocusPanel({
               {sessionTodos.length > 0 && (
                 <div className="focus-session-task-list" aria-label="Tasks in this focus session">
                   {sessionTodos.map((todo) => {
-                    const priority = getPriorityMeta(todo)
                     const isComplete = todo.is_completed === 1
 
                     return (
@@ -62,9 +60,6 @@ function FocusPanel({
                           <strong>{todo.title}</strong>
                           <p>{formatTime(todo.deadline)} / {getFocusCue(todo)}</p>
                         </div>
-                        <span className={`priority-badge priority-badge--${priority.tone}`}>
-                          {priority.label} {formatBhpsScore(todo)}
-                        </span>
                       </article>
                     )
                   })}
@@ -86,7 +81,7 @@ function FocusPanel({
                   <div>
                     <strong>{studyBlock?.title || `Start with ${topTodo.title}`}</strong>
                     <p className="muted">
-                      {studyBlock?.reason || `BHPS picked this because it is ${topPriority.label.toLowerCase()} priority with a ${topLoad.label.toLowerCase()} load.`}
+                      Review this block before starting. {studyBlock?.reason || `BHPS picked this because it is ${topPriority.label.toLowerCase()} priority with a ${topLoad.label.toLowerCase()} load.`}
                     </p>
                   </div>
                   <div className="focus-block-summary">
@@ -153,8 +148,16 @@ function FocusPanel({
                       )}
                     </div>
                   )}
-                  <button onClick={() => onStartFocus(startTodoIds)} type="button">
-                    Start 50-min Focus
+                  <button
+                    onClick={() => onPrepareFocus({
+                      duration_minutes: studyBlock?.duration_minutes || 50,
+                      reason: studyBlock?.reason || '',
+                      title: studyBlock?.title || `Focus: ${topTodo.title}`,
+                      todos: blockTodos,
+                    })}
+                    type="button"
+                  >
+                    Prepare Focus
                   </button>
                 </>
               ) : (
@@ -164,7 +167,7 @@ function FocusPanel({
                     <p className="muted">Add active tasks with deadlines and effort estimates to unlock BHPS recommendations.</p>
                   </div>
                   <button disabled type="button">
-                    Start 50-min Focus
+                    Prepare Focus
                   </button>
                 </>
               )}

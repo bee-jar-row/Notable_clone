@@ -21,6 +21,14 @@ class FocusSessionController {
     }
   }
 
+  static update(req, res) {
+    try {
+      return sendResult(res, FocusService.update(req.userId, req.params.id, req.body));
+    } catch (error) {
+      return res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  }
+
   static getSummary(req, res) {
     try {
       return sendResult(res, FocusService.getSummary(req.userId, req.params.id));
