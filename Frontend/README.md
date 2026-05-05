@@ -18,7 +18,7 @@ src/
 ├── features/         # Auth, dashboard, workspace, notebook, chapter, focus, settings, search
 ├── shared/           # Generic UI primitives and API transport
 ├── styles/           # CSS layers and theme overrides
-└── utils/            # Date, priority, reminder helpers
+└── utils/            # Date, priority, reminder, calendar helpers
 ```
 
 ## Local Development
@@ -59,10 +59,11 @@ npm run preview  # Preview production build
 
 ## Feature Notes
 
-- Dashboard includes workspace cards, search/filter/sort, reminders, Your Day calendar panel, timeline, and Focus Session recommendations.
-- Focus Session state is global across protected pages and supports active-session editing for title, notes, duration, and todos.
-- Notebook pages own timeline/resources/notes/chapter lists.
-- Chapter editor uses Markdown as the stored format and lazy-loads the rich editor chunk.
+- Dashboard includes workspace cards, search/filter/sort, reminders, Your Day calendar embed panel, All To Do, and Focus Session recommendations.
+- Your Day accepts only blank or `https://calendar.google.com/calendar/embed?...` values from Settings.
+- Focus Session state is global across protected pages; title, duration, notes, and todos are configured in the pre-start Prepare Focus modal.
+- Notebook pages own To Do/resources/notes/chapter lists, including note edit/delete and resource download/delete actions.
+- Chapter editor uses Markdown as the stored format and lazy-loads the rich editor chunk. The insert-code-block toolbar action is intentionally disabled for demo stability; fenced code blocks can still be typed manually.
 - Search is global command-style search across workspace, tasks, notes, chapters, and resources.
 
 ## Build Note
