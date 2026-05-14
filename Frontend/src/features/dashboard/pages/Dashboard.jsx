@@ -10,6 +10,41 @@ import TimelinePanel from '../components/TimelinePanel'
 import WorkspaceGrid from '../components/WorkspaceGrid'
 import { useDashboard } from '../hooks/useDashboard'
 
+const styles = `
+  .dashboard-page {
+    min-height: 100vh;
+    background: #f5f4f1;
+    font-family: 'Inria Serif', Georgia, serif;
+    color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .dashboard-sidebar {
+    border-left: 1px solid #dddbd6;
+    display: flex;
+    flex-direction: column;
+    background: #faf9f7;
+  }
+
+  .dashboard-loading {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #aaa;
+    padding: 64px 48px;
+    text-align: center;
+  }
+`
+
 function Dashboard() {
   const auth = useAuth()
   const focus = useFocusSession()
@@ -48,77 +83,80 @@ function Dashboard() {
   } = dashboard
 
   return (
-    <main className="app-shell dashboard-page">
-      <DashboardHeader
-        onSortModeChange={setSortMode}
-        onStatusFilterChange={setStatusFilter}
-        onTypeFilterChange={setTypeFilter}
-        profile={data.profile}
-        sortMode={sortMode}
-        statusFilter={statusFilter}
-        typeFilter={typeFilter}
-      />
-      <FeedbackBanner error={error} message={message} />
+    <>
+      <style>{styles}</style>
+      <main className="app-shell dashboard-page">
+        <DashboardHeader
+          onSortModeChange={setSortMode}
+          onStatusFilterChange={setStatusFilter}
+          onTypeFilterChange={setTypeFilter}
+          profile={data.profile}
+          sortMode={sortMode}
+          statusFilter={statusFilter}
+          typeFilter={typeFilter}
+        />
+        <FeedbackBanner error={error} message={message} />
 
-      {isLoading ? (
-        <div className="panel">Loading workspace...</div>
-      ) : (
-        <div className="dashboard-grid">
-          <WorkspaceGrid
-            onDeleteNotebook={deleteNotebook}
-            onOpenModal={openModal}
-            workspaceItems={visibleWorkspaceItems}
-          />
-          <div className="dashboard-sidebar">
-            <CalendarPanel
-              activeModal={activeModal}
-              onCloseModal={closeModal}
+        {isLoading ? (
+          <div className="dashboard-loading">Loading workspace…</div>
+        ) : (
+          <div className="dashboard-grid">
+            <WorkspaceGrid
+              onDeleteNotebook={deleteNotebook}
               onOpenModal={openModal}
-              profile={data.profile}
+              workspaceItems={visibleWorkspaceItems}
             />
-            <RemindersPanel reminders={reminderTodos} />
-            <TimelinePanel
-              onCompleteTodo={completeTodo}
-              onDeleteTodo={deleteTodo}
-              onOpenModal={openModal}
-              todos={visibleTimelineTodos}
-            />
-            <FocusPanel
-              activeSession={focus.activeSession}
-              isExpired={focus.isExpired}
-              onCompleteTodo={focus.completeTodo}
-              onDownloadSupportResource={focus.downloadSupportResource}
-              onEndFocus={focus.endFocus}
-              onOpenFocus={focus.openOverlay}
-              onOpenSupportNote={focus.openSupportNote}
-              onPrepareFocus={focus.openPrepareFocus}
-              progress={focus.progress}
-              recommendedBlock={data.recommendedBlock}
-              recommendedTodos={data.recommendedTodos}
-              remainingSeconds={focus.remainingSeconds}
-            />
+            <div className="dashboard-sidebar">
+              <CalendarPanel
+                activeModal={activeModal}
+                onCloseModal={closeModal}
+                onOpenModal={openModal}
+                profile={data.profile}
+              />
+              <RemindersPanel reminders={reminderTodos} />
+              <TimelinePanel
+                onCompleteTodo={completeTodo}
+                onDeleteTodo={deleteTodo}
+                onOpenModal={openModal}
+                todos={visibleTimelineTodos}
+              />
+              <FocusPanel
+                activeSession={focus.activeSession}
+                isExpired={focus.isExpired}
+                onCompleteTodo={focus.completeTodo}
+                onDownloadSupportResource={focus.downloadSupportResource}
+                onEndFocus={focus.endFocus}
+                onOpenFocus={focus.openOverlay}
+                onOpenSupportNote={focus.openSupportNote}
+                onPrepareFocus={focus.openPrepareFocus}
+                progress={focus.progress}
+                recommendedBlock={data.recommendedBlock}
+                recommendedTodos={data.recommendedTodos}
+                remainingSeconds={focus.remainingSeconds}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <DashboardModals
-        activeModal={activeModal}
-        folderTitle={folderTitle}
-        folders={data.folders}
-        notebooks={data.notebooks}
-        notebookTitle={notebookTitle}
-        onClose={closeModal}
-        onFolderTitleChange={setFolderTitle}
-        onNotebookTitleChange={setNotebookTitle}
-        onSelectedFolderChange={setSelectedFolder}
-        onSubmitFolder={submitFolder}
-        onSubmitNotebook={submitNotebook}
-        onSubmitTodo={submitTodo}
-        onTodoFormChange={setTodoForm}
-        selectedFolder={selectedFolder}
-        todoForm={todoForm}
-      />
-    </main>
+        <DashboardModals
+          activeModal={activeModal}
+          folderTitle={folderTitle}
+          folders={data.folders}
+          notebooks={data.notebooks}
+          notebookTitle={notebookTitle}
+          onClose={closeModal}
+          onFolderTitleChange={setFolderTitle}
+          onNotebookTitleChange={setNotebookTitle}
+          onSelectedFolderChange={setSelectedFolder}
+          onSubmitFolder={submitFolder}
+          onSubmitNotebook={submitNotebook}
+          onSubmitTodo={submitTodo}
+          onTodoFormChange={setTodoForm}
+          selectedFolder={selectedFolder}
+          todoForm={todoForm}
+        />
+      </main>
+    </>
   )
 }
 
