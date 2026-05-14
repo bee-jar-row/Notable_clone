@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import FolderCard from '../../workspace/components/FolderCard'
 import NotebookCard from '../../workspace/components/NotebookCard'
+import NotebookCardActions from '../../workspace/components/NotebookCardActions'
 import { DASHBOARD_MODAL } from '../hooks/useDashboard'
 
-function WorkspaceGrid({ onDeleteNotebook, onOpenModal, workspaceItems }) {
+function WorkspaceGrid({ onDeleteNotebook, onEditNotebookCover, onOpenModal, workspaceItems }) {
   return (
     <section className="workspace-grid" aria-label="Workspace items">
       {workspaceItems.map((item) => (
@@ -19,16 +20,20 @@ function WorkspaceGrid({ onDeleteNotebook, onOpenModal, workspaceItems }) {
                 state={{ fromDashboard: true }}
                 to={`/notebook/${item.id}`}
               >
-                <NotebookCard title={item.title} taskCount={item.taskCount} />
+                <NotebookCard
+                  coverColor={item.cover_color}
+                  coverImageFilename={item.cover_image_filename}
+                  coverType={item.cover_type}
+                  notebookId={item.id}
+                  title={item.title}
+                  taskCount={item.taskCount}
+                />
               </Link>
-              <button
-                aria-label={`Delete notebook ${item.title}`}
-                className="workspace-item__delete"
-                onClick={() => onDeleteNotebook(item.id)}
-                type="button"
-              >
-                Delete
-              </button>
+              <NotebookCardActions
+                notebook={item}
+                onDelete={onDeleteNotebook}
+                onEditCover={onEditNotebookCover}
+              />
             </>
           )}
         </div>

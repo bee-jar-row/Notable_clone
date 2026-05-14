@@ -11,7 +11,13 @@ import {
   getFolders,
   getNotebooks,
   getTodos,
+  updateNotebook,
 } from '../../workspace/workspace.api'
+import {
+  EMPTY_NOTEBOOK_COVER,
+  getNotebookCoverForm,
+  getNotebookCoverPayload,
+} from '../../workspace/notebookCover'
 import { getProfile } from '../../settings/settings.api'
 
 const EMPTY_TODO = {
@@ -27,6 +33,7 @@ const EMPTY_TODO = {
 export const DASHBOARD_MODAL = {
   FOLDER: 'folder',
   NOTEBOOK: 'notebook',
+  NOTEBOOK_COVER: 'notebook-cover',
   TODO: 'todo',
   GCAL: 'gcal',
 }
@@ -53,6 +60,8 @@ export function useDashboard(auth) {
   const [data, setData] = useState(() => getDefaultState(auth.user))
   const [folderTitle, setFolderTitle] = useState('')
   const [notebookTitle, setNotebookTitle] = useState('')
+  const [notebookCover, setNotebookCover] = useState(EMPTY_NOTEBOOK_COVER)
+  const [editingNotebook, setEditingNotebook] = useState(null)
   const [selectedFolder, setSelectedFolder] = useState('')
   const [todoForm, setTodoForm] = useState(EMPTY_TODO)
   const [typeFilter, setTypeFilter] = useState('all')
@@ -195,8 +204,18 @@ export function useDashboard(auth) {
     }
   }, [loadDashboard])
 
-  const closeModal = useCallback(() => setActiveModal(null), [])
+  const closeModal = useCallback(() => {
+    setActiveModal(null)
+    setEditingNotebook(null)
+    setNotebookCover(EMPTY_NOTEBOOK_COVER)
+  }, [])
   const openModal = useCallback((modal) => setActiveModal(modal), [])
+
+  const openNotebookCoverModal = useCallback((notebook) => {
+    setEditingNotebook(notebook)
+    setNotebookCover(getNotebookCoverForm(notebook))
+    setActiveModal(DASHBOARD_MODAL.NOTEBOOK_COVER)
+  }, [])
 
   const submitFolder = useCallback((event) => {
     event.preventDefault()
@@ -213,15 +232,38 @@ export function useDashboard(auth) {
   const submitNotebook = useCallback((event) => {
     event.preventDefault()
     return runMutation(
-      () => createNotebook({ title: notebookTitle, folder_id: selectedFolder || null }),
+      () => createNotebook({
+        title: notebookTitle,
+        folder_id: selectedFolder || null,
+        ...getNotebookCoverPayload(notebookCover),
+      }),
       'Notebook created.',
       () => {
         setNotebookTitle('')
+        setNotebookCover(EMPTY_NOTEBOOK_COVER)
         setSelectedFolder('')
         closeModal()
       },
     )
-  }, [closeModal, notebookTitle, runMutation, selectedFolder])
+  }, [closeModal, notebookCover, notebookTitle, runMutation, selectedFolder])
+
+  const submitNotebookCover = useCallback((event) => {
+    event.preventDefault()
+    if (!editingNotebook) return undefined
+
+    return runMutation(
+      () => updateNotebook(editingNotebook.id, {
+        title: editingNotebook.title,
+        folder_id: editingNotebook.folder_id || null,
+        ...getNotebookCoverPayload(notebookCover, editingNotebook),
+      }),
+      'Notebook cover updated.',
+      () => {
+        setNotebookCover(EMPTY_NOTEBOOK_COVER)
+        closeModal()
+      },
+    )
+  }, [closeModal, editingNotebook, notebookCover, runMutation])
 
   const submitTodo = useCallback((event) => {
     event.preventDefault()
@@ -274,14 +316,18 @@ export function useDashboard(auth) {
     deleteNotebook,
     deleteTodo,
     error,
+    editingNotebook,
     folderTitle,
     isLoading,
     message,
     notebookTitle,
+    notebookCover,
     openModal,
+    openNotebookCoverModal,
     selectedFolder,
     setFolderTitle,
     setNotebookTitle,
+    setNotebookCover,
     setSelectedFolder,
     setSortMode,
     setStatusFilter,
@@ -291,6 +337,7 @@ export function useDashboard(auth) {
     statusFilter,
     submitFolder,
     submitNotebook,
+    submitNotebookCover,
     submitTodo,
     todoForm,
     typeFilter,

@@ -54,16 +54,20 @@ function Dashboard() {
     data,
     deleteNotebook,
     deleteTodo,
+    editingNotebook,
     error,
     folderTitle,
     isLoading,
     message,
     notebookTitle,
+    notebookCover,
     openModal,
+    openNotebookCoverModal,
     selectedFolder,
     reminderTodos,
     setFolderTitle,
     setNotebookTitle,
+    setNotebookCover,
     setSelectedFolder,
     setSortMode,
     setStatusFilter,
@@ -73,6 +77,7 @@ function Dashboard() {
     statusFilter,
     submitFolder,
     submitNotebook,
+    submitNotebookCover,
     submitTodo,
     todoForm,
     typeFilter,
@@ -100,6 +105,7 @@ function Dashboard() {
         ) : (
           <div className="dashboard-grid">
             <WorkspaceGrid
+              onEditNotebookCover={openNotebookCoverModal}
               onDeleteNotebook={deleteNotebook}
               onOpenModal={openModal}
               workspaceItems={visibleWorkspaceItems}
@@ -138,16 +144,20 @@ function Dashboard() {
 
         <DashboardModals
           activeModal={activeModal}
+          editingNotebook={editingNotebook}
           folderTitle={folderTitle}
           folders={data.folders}
           notebooks={data.notebooks}
           notebookTitle={notebookTitle}
+          notebookCover={notebookCover}
           onClose={closeModal}
           onFolderTitleChange={setFolderTitle}
           onNotebookTitleChange={setNotebookTitle}
+          onNotebookCoverChange={setNotebookCover}
           onSelectedFolderChange={setSelectedFolder}
           onSubmitFolder={submitFolder}
           onSubmitNotebook={submitNotebook}
+          onSubmitNotebookCover={submitNotebookCover}
           onSubmitTodo={submitTodo}
           onTodoFormChange={setTodoForm}
           selectedFolder={selectedFolder}

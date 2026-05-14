@@ -61,6 +61,23 @@ export async function apiRequest(path, options = {}) {
   return payload
 }
 
+export async function apiBlobRequest(path, options = {}) {
+  const token = getToken()
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(options.headers || {}),
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error('Request failed')
+  }
+
+  return response.blob()
+}
+
 export function getResourceDownloadUrl(resourceId) {
   return `${API_BASE_URL}/resources/${resourceId}/download`
 }

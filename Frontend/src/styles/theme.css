@@ -215,7 +215,7 @@ textarea:focus-visible {
   text-transform: uppercase !important;
 }
 
-.workspace-item__delete {
+.workspace-item__menu-button {
   border-color: #dddbd6;
   background: #faf9f7;
   color: #1a1a1a;
