@@ -1,6 +1,6 @@
 import { NOTEBOOK_MODAL } from '../hooks/useNotebook'
 
-function ResourcesPanel({ onDownload, onOpenModal, resources }) {
+function ResourcesPanel({ onDeleteResource, onDownload, onOpenModal, resources }) {
   return (
     <div className="notebook-panel">
       <div className="notebook-panel-header">
@@ -21,14 +21,24 @@ function ResourcesPanel({ onDownload, onOpenModal, resources }) {
           {resources.map((resource) => (
             <div className="resource-row" key={resource.id}>
               <p>{resource.original_name}</p>
-              <button
-                aria-label={`Download ${resource.original_name}`}
-                className="resource-row__action"
-                onClick={() => onDownload(resource)}
-                type="button"
-              >
-                ↓
-              </button>
+              <div className="resource-row__actions">
+                <button
+                  aria-label={`Download ${resource.original_name}`}
+                  className="resource-row__action"
+                  onClick={() => onDownload(resource)}
+                  type="button"
+                >
+                  Download
+                </button>
+                <button
+                  aria-label={`Delete ${resource.original_name}`}
+                  className="resource-row__action resource-row__action--danger"
+                  onClick={() => onDeleteResource(resource.id)}
+                  type="button"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>

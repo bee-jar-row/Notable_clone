@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Modal from '../../../shared/components/ui/Modal'
+import { normalizeGoogleCalendarEmbedUrl } from '../../../utils/calendar'
 import { DASHBOARD_MODAL } from '../hooks/useDashboard'
 
 function CalendarEmptyState() {
@@ -7,15 +8,16 @@ function CalendarEmptyState() {
     <div className="calendar-empty-state">
       <strong>Google Calendar belum terhubung.</strong>
       <p>Tambahkan public embed URL di Settings untuk melihat jadwal di sini.</p>
-      <Link to="/settings">Open Settings</Link>
+      <Link state={{ returnLabel: 'Dashboard', returnTo: '/dashboard' }} to="/settings">Open Settings</Link>
     </div>
   )
 }
 
 function GoogleCalendarFrame({ gcalUrl, title }) {
-  if (!gcalUrl) return <CalendarEmptyState />
+  const safeUrl = normalizeGoogleCalendarEmbedUrl(gcalUrl)
+  if (!safeUrl) return <CalendarEmptyState />
 
-  return <iframe className="calendar-frame" src={gcalUrl} title={title} />
+  return <iframe className="calendar-frame" src={safeUrl} title={title} />
 }
 
 function CalendarPanel({ activeModal, onCloseModal, onOpenModal, profile }) {

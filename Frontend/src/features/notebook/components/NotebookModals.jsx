@@ -9,6 +9,7 @@ function NotebookModals({
   activeModal,
   chapterForm,
   chapters,
+  editingNoteId,
   noteForm,
   onChapterFormChange,
   onClose,
@@ -68,7 +69,7 @@ function NotebookModals({
         isOpen={activeModal === NOTEBOOK_MODAL.NOTE}
         onClose={onClose}
         size="dialog"
-        title="Quick Note"
+        title={editingNoteId ? 'Edit Note' : 'Quick Note'}
       >
         <form className="stack modal-form" onSubmit={onSubmitNote}>
           <label className="auth-form-label">
@@ -90,18 +91,22 @@ function NotebookModals({
               value={noteForm.content}
             />
           </label>
-          <label className="auth-form-label">
-            Linked todo
-            <select
-              className="auth-form-input"
-              onChange={(event) => onNoteFormChange({ ...noteForm, todo_id: event.target.value })}
-              value={noteForm.todo_id}
-            >
-              <option value="">No linked todo</option>
-              {todos.map((todo) => <option key={todo.id} value={todo.id}>{todo.title}</option>)}
-            </select>
-          </label>
-          <button className="auth-submit-btn" type="submit">Create Note</button>
+          {!editingNoteId && (
+            <label className="auth-form-label">
+              Linked todo
+              <select
+                className="auth-form-input"
+                onChange={(event) => onNoteFormChange({ ...noteForm, todo_id: event.target.value })}
+                value={noteForm.todo_id}
+              >
+                <option value="">No linked todo</option>
+                {todos.map((todo) => <option key={todo.id} value={todo.id}>{todo.title}</option>)}
+              </select>
+            </label>
+          )}
+          <button className="auth-submit-btn" type="submit">
+            {editingNoteId ? 'Save Note' : 'Create Note'}
+          </button>
         </form>
       </Modal>
 

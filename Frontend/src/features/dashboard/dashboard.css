@@ -693,7 +693,8 @@
 
 .focus-step p,
 .focus-session-task p,
-.focus-support-grid p {
+.focus-support-grid p,
+.focus-support-grid .focus-support-link {
   margin: 4px 0 0;
   color: #68768d;
   font-size: 12px;
@@ -746,7 +747,8 @@
   padding: 10px;
 }
 
-.focus-support-grid p {
+.focus-support-grid p,
+.focus-support-grid .focus-support-link {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

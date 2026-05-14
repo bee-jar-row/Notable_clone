@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useAuth } from '../../../app/providers/AuthContext'
 import FeedbackBanner from '../../../shared/components/ui/FeedbackBanner'
 import ProtectedTopbar from '../../../shared/components/ui/ProtectedTopbar'
+import { normalizeGoogleCalendarEmbedUrl } from '../../../utils/calendar'
 import { changePassword, getProfile, updateProfile } from '../settings.api'
 
 const emptyPasswordForm = {
@@ -12,6 +14,10 @@ const emptyPasswordForm = {
 
 function Settings() {
   const auth = useAuth()
+  const location = useLocation()
+  const returnTo = location.state?.returnTo || '/dashboard'
+  const returnLabel = location.state?.returnLabel || 'Dashboard'
+  const returnState = location.state?.returnState || null
   const [profileForm, setProfileForm] = useState({ name: '', display_name: '', gcal_url: '' })
   const [passwordForm, setPasswordForm] = useState(emptyPasswordForm)
   const [message, setMessage] = useState('')
@@ -43,10 +49,19 @@ function Settings() {
     event.preventDefault()
     setError('')
     setMessage('')
+
+    const normalizedGcalUrl = normalizeGoogleCalendarEmbedUrl(profileForm.gcal_url)
+    if (normalizedGcalUrl === null) {
+      setError('Google Calendar URL must be a public calendar embed URL.')
+      return
+    }
+
     setIsSavingProfile(true)
     try {
-      await updateProfile(profileForm)
-      auth.updateUser({ ...auth.user, ...profileForm })
+      const nextProfile = { ...profileForm, gcal_url: normalizedGcalUrl }
+      await updateProfile(nextProfile)
+      setProfileForm(nextProfile)
+      auth.updateUser({ ...auth.user, ...nextProfile })
       setMessage('Profile updated.')
     } catch (err) {
       setError(err.message)
@@ -83,8 +98,9 @@ function Settings() {
   return (
     <main className="app-shell settings-page">
       <ProtectedTopbar
-        backLabel="Dashboard"
-        backTo="/dashboard"
+        backLabel={returnLabel}
+        backState={returnState}
+        backTo={returnTo}
         className="settings-topbar"
         showSettings={false}
         title="Account Settings"
@@ -128,7 +144,7 @@ function Settings() {
           <section className="settings-card">
             <div className="settings-card__header">
               <h2>Calendar</h2>
-              <p>Paste a public Google Calendar embed URL for the Your Day panel.</p>
+              <p>Paste a public Google Calendar embed URL. Clear the input and save to reset it.</p>
             </div>
             <form className="stack" onSubmit={submitProfile}>
               <label className="auth-form-label">
@@ -137,9 +153,18 @@ function Settings() {
                   className="auth-form-input"
                   onChange={(event) => setProfileForm({ ...profileForm, gcal_url: event.target.value })}
                   placeholder="https://calendar.google.com/calendar/embed?src=..."
+                  type="url"
                   value={profileForm.gcal_url}
                 />
               </label>
+              <p className="muted">Use the embed URL from Google Calendar settings, not a share/download link.</p>
+              <button
+                className="ghost-button"
+                onClick={() => setProfileForm({ ...profileForm, gcal_url: '' })}
+                type="button"
+              >
+                Clear Calendar Link
+              </button>
               <button className="auth-submit-btn" disabled={isSavingProfile} type="submit">
                 {isSavingProfile ? 'Saving...' : 'Save Calendar'}
               </button>

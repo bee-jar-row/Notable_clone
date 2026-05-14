@@ -1,6 +1,6 @@
 # Notable
 
-Notable is a local-first study productivity app for organizing folders, notebooks, chapters, notes, tasks, resources, calendar context, and focus sessions. The MVP combines a React/Vite frontend with an Express/SQLite backend and implements the core flow described in the group report: authentication, dashboard workspace, notebook/chapter writing, BHPS task priority, global search, reminders, and editable focus-session recommendations.
+Notable is a local-first study productivity app for organizing folders, notebooks, chapters, notes, tasks, resources, calendar context, and focus sessions. The MVP combines a React/Vite frontend with an Express/SQLite backend and implements the core flow described in the group report: authentication, dashboard workspace, notebook/chapter writing, BHPS task priority, global search, reminders, and pre-start focus-session preparation.
 
 Group report: [Notable Group Report](https://docs.google.com/document/d/1MLaiFm2-XS0ueA3eEfL4rn2nbUW_koQJesylkEIdjTQ/edit?usp=sharing)
 
@@ -93,16 +93,17 @@ http://127.0.0.1:5173
   - clickable folders and notebooks
   - todos with ownership, deadline, academic weight, estimated effort, reminders, BHPS score, and priority label
   - search, filter, sort, reminders, and timeline panels
-  - Your Day calendar panel with Google Calendar embed fallback
+  - Your Day calendar panel using a validated Google Calendar public embed URL
   - global command search across workspace, tasks, notes, chapters, and resources
-  - BHPS focus recommendations and editable global focus timer
+  - BHPS focus recommendations and global focus timer
 - Notebook detail route at `/notebook/:id`:
   - chapter list from backend with delete/edit actions
   - chapter search
   - create chapter and continue writing in the full editor
   - create quick note linked optionally to a todo
+  - edit/delete linked notes
   - upload resource to notebook/chapter
-  - download resource
+  - download/delete resources
 - Folder detail route at `/folder/:id`:
   - notebook list in that folder
   - folder-related task timeline
@@ -110,12 +111,14 @@ http://127.0.0.1:5173
 - Chapter detail/editor route at `/notebook/:notebookId/chapter/:chapterId/edit`:
   - rich Markdown editor with toolbar
   - rendered Markdown reading pane
-  - linked resources
+  - linked resources with upload/download/delete
+  - related notebook notes
 - Focus Session:
   - recommended study block from BHPS-ranked tasks
+  - Prepare Focus modal for title, duration, notes, and task selection before start
   - global countdown widget across protected pages
   - full focus overlay
-  - editable active session title, notes, duration, and task list
+  - clickable linked notes/resources in recommendation and focus overlay
   - end-session summary
 - Backend ownership checks prevent users from updating/deleting/downloading another user's data.
 - SQLite schema is created idempotently on startup, so a fresh local database can boot without manual migration.
@@ -167,7 +170,7 @@ Authorization: Bearer <token>
 | Method | Route | Description |
 | --- | --- | --- |
 | `GET` | `/user/profile` | Get safe current-user profile |
-| `PATCH` | `/user/profile` | Update profile name/display name |
+| `PATCH` | `/user/profile` | Update profile name/display name and optional Google Calendar embed URL |
 | `PATCH` | `/user/password` | Change current-user password |
 | `GET` | `/folders` | List folders |
 | `POST` | `/folders` | Create folder |
@@ -200,7 +203,7 @@ Authorization: Bearer <token>
 | `GET` | `/focus-sessions` | List focus sessions |
 | `GET` | `/focus-sessions/recommended` | Recommend incomplete todos and a BHPS study block |
 | `POST` | `/focus-sessions` | Start focus session |
-| `PATCH` | `/focus-sessions/:id` | Edit an active focus session title, notes, duration, and task list |
+| `PATCH` | `/focus-sessions/:id` | Edit an active focus session title, notes, duration, and task list; retained for API compatibility |
 | `PATCH` | `/focus-sessions/:id/end` | End focus session |
 | `GET` | `/focus-sessions/:id/summary` | Get focus session summary |
 | `GET` | `/search?q=...` | Global grouped search with BHPS recommendations |
@@ -249,7 +252,7 @@ curl -X POST http://localhost:3000/api/todos \
   }'
 ```
 
-Edit an active focus session:
+Edit an active focus session through the API compatibility endpoint:
 
 ```bash
 curl -X PATCH http://localhost:3000/api/focus-sessions/<session-id> \
@@ -295,3 +298,5 @@ curl http://localhost:3000/
 - These local runtime artifacts may change during manual testing.
 - `Backend/database/notable.db` may change when schema bootstrap adds nullable columns during smoke/dev runs.
 - Chapter content is stored as Markdown text in `chapters.content`.
+- The app accepts only blank or `https://calendar.google.com/calendar/embed?...` values for `gcal_url`.
+- The rich Markdown toolbar intentionally omits insert-code-block UI for demo stability; fenced code blocks can still be typed manually.

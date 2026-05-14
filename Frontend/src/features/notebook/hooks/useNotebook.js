@@ -7,6 +7,8 @@ import {
   createNote,
   createTodo,
   deleteChapter as deleteChapterRequest,
+  deleteNote as deleteNoteRequest,
+  deleteResource as deleteResourceRequest,
   deleteTodo as deleteTodoRequest,
   downloadNotebookResource,
   getNotebookChapters,
@@ -14,6 +16,7 @@ import {
   getNotebooks,
   getNotes,
   getTodos,
+  updateNote,
   uploadResource,
 } from '../notebook.api'
 
@@ -53,6 +56,7 @@ export function useNotebook({ id, onChapterCreated, onMissingNotebook }) {
   const [search, setSearch] = useState('')
   const [chapterForm, setChapterForm] = useState(EMPTY_CHAPTER_FORM)
   const [noteForm, setNoteForm] = useState(EMPTY_NOTE_FORM)
+  const [editingNoteId, setEditingNoteId] = useState(null)
   const [resourceForm, setResourceForm] = useState(EMPTY_RESOURCE_FORM)
   const [todoForm, setTodoForm] = useState(EMPTY_TODO_FORM)
   const [activeModal, setActiveModal] = useState(null)
@@ -126,8 +130,21 @@ export function useNotebook({ id, onChapterCreated, onMissingNotebook }) {
     }
   }, [loadNotebook])
 
-  const closeModal = useCallback(() => setActiveModal(null), [])
+  const closeModal = useCallback(() => {
+    setActiveModal(null)
+    setEditingNoteId(null)
+    setNoteForm(EMPTY_NOTE_FORM)
+  }, [])
   const openModal = useCallback((modal) => setActiveModal(modal), [])
+  const openEditNote = useCallback((note) => {
+    setEditingNoteId(note.id)
+    setNoteForm({
+      content: note.content || '',
+      title: note.title || '',
+      todo_id: note.todo_id || '',
+    })
+    setActiveModal(NOTEBOOK_MODAL.NOTE)
+  }, [])
 
   const submitChapter = useCallback((event) => {
     event.preventDefault()
@@ -150,18 +167,24 @@ export function useNotebook({ id, onChapterCreated, onMissingNotebook }) {
   const submitNote = useCallback((event) => {
     event.preventDefault()
     return runMutation(
-      () => createNote({
-        title: noteForm.title,
-        content: noteForm.content,
-        todo_id: noteForm.todo_id || null,
-      }),
-      'Note created.',
+      () => (editingNoteId
+        ? updateNote(editingNoteId, {
+          title: noteForm.title,
+          content: noteForm.content,
+        })
+        : createNote({
+          title: noteForm.title,
+          content: noteForm.content,
+          todo_id: noteForm.todo_id || null,
+        })),
+      editingNoteId ? 'Note updated.' : 'Note created.',
       () => {
         setNoteForm(EMPTY_NOTE_FORM)
+        setEditingNoteId(null)
         closeModal()
       },
     )
-  }, [closeModal, noteForm, runMutation])
+  }, [closeModal, editingNoteId, noteForm, runMutation])
 
   const submitResource = useCallback((event) => {
     event.preventDefault()
@@ -216,6 +239,24 @@ export function useNotebook({ id, onChapterCreated, onMissingNotebook }) {
     }
   }, [])
 
+  const deleteNote = useCallback((noteId) => {
+    if (!window.confirm('Are you sure you want to delete this note?')) return undefined
+
+    return runMutation(
+      () => deleteNoteRequest(noteId),
+      'Note deleted.',
+    )
+  }, [runMutation])
+
+  const deleteResource = useCallback((resourceId) => {
+    if (!window.confirm('Are you sure you want to delete this resource?')) return undefined
+
+    return runMutation(
+      () => deleteResourceRequest(resourceId),
+      'Resource deleted.',
+    )
+  }, [runMutation])
+
   const deleteChapter = useCallback((chapterId) => {
     if (!window.confirm('Are you sure you want to delete this chapter?')) return undefined
 
@@ -246,8 +287,11 @@ export function useNotebook({ id, onChapterCreated, onMissingNotebook }) {
     closeModal,
     completeTodo,
     deleteChapter,
+    deleteNote,
+    deleteResource,
     deleteTodo,
     download,
+    editingNoteId,
     error,
     filteredChapters,
     groupedTodos,
@@ -257,6 +301,7 @@ export function useNotebook({ id, onChapterCreated, onMissingNotebook }) {
     notes,
     notebook,
     openModal,
+    openEditNote,
     resourceForm,
     resources,
     search,

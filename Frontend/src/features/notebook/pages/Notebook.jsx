@@ -33,8 +33,11 @@ function Notebook() {
     closeModal,
     completeTodo,
     deleteChapter,
+    deleteNote,
+    deleteResource,
     deleteTodo,
     download,
+    editingNoteId,
     error,
     filteredChapters,
     groupedTodos,
@@ -44,6 +47,7 @@ function Notebook() {
     notes,
     notebook: notebookData,
     openModal,
+    openEditNote,
     resourceForm,
     resources,
     search,
@@ -88,10 +92,13 @@ function Notebook() {
               onOpenModal={openModal}
             />
             <NotesPanel
+              onDeleteNote={deleteNote}
+              onEditNote={openEditNote}
               notes={notes}
               onOpenModal={openModal}
             />
             <ResourcesPanel
+              onDeleteResource={deleteResource}
               onDownload={download}
               onOpenModal={openModal}
               resources={resources}
@@ -114,6 +121,7 @@ function Notebook() {
         chapterForm={chapterForm}
         chapters={chapters}
         noteForm={noteForm}
+        editingNoteId={editingNoteId}
         onChapterFormChange={setChapterForm}
         onClose={closeModal}
         onNoteFormChange={setNoteForm}

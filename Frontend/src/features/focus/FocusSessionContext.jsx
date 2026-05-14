@@ -1,9 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useAuth } from '../../app/providers/AuthContext'
+import Modal from '../../shared/components/ui/Modal'
 import FocusSummaryModal from '../dashboard/components/FocusSummaryModal'
 import {
   completeFocusTodo,
+  downloadFocusResource,
   endFocusSession,
   getFocusNotes,
   getFocusResources,
@@ -77,6 +79,7 @@ export function FocusSessionProvider({ children }) {
   const [availableTodos, setAvailableTodos] = useState([])
   const [supportContext, setSupportContext] = useState({ notes: [], resources: [] })
   const [lastFocusSummary, setLastFocusSummary] = useState(null)
+  const [supportNote, setSupportNote] = useState(null)
   const [isOverlayOpen, setIsOverlayOpen] = useState(false)
   const [isPrepareOpen, setIsPrepareOpen] = useState(false)
   const [prepareDraft, setPrepareDraft] = useState(null)
@@ -89,6 +92,7 @@ export function FocusSessionProvider({ children }) {
       setActiveSession(null)
       setAvailableTodos([])
       setSupportContext({ notes: [], resources: [] })
+      setSupportNote(null)
       setIsOverlayOpen(false)
       setIsPrepareOpen(false)
       setPrepareDraft(null)
@@ -219,6 +223,15 @@ export function FocusSessionProvider({ children }) {
     }
   }, [activeSession?.id, refreshFocus])
 
+  const downloadSupportResource = useCallback(async (resource) => {
+    setFocusError('')
+    try {
+      await downloadFocusResource(resource.id, resource.original_name)
+    } catch (err) {
+      setFocusError(err.message)
+    }
+  }, [])
+
   const value = useMemo(() => ({
     ...timing,
     activeSession,
@@ -226,7 +239,9 @@ export function FocusSessionProvider({ children }) {
     clearFocusSummary: () => setLastFocusSummary(null),
     closeOverlay: () => setIsOverlayOpen(false),
     closePrepareFocus: () => setIsPrepareOpen(false),
+    closeSupportNote: () => setSupportNote(null),
     completeTodo,
+    downloadSupportResource,
     endFocus,
     focusError,
     isLoadingFocus,
@@ -235,6 +250,7 @@ export function FocusSessionProvider({ children }) {
     lastFocusSummary,
     openOverlay: () => setIsOverlayOpen(true),
     openPrepareFocus,
+    openSupportNote: setSupportNote,
     prepareDraft,
     refreshFocus,
     startFocus,
@@ -243,6 +259,7 @@ export function FocusSessionProvider({ children }) {
     activeSession,
     availableTodos,
     completeTodo,
+    downloadSupportResource,
     endFocus,
     focusError,
     isLoadingFocus,
@@ -272,6 +289,18 @@ export function FocusSessionProvider({ children }) {
         />
       )}
       {auth.isAuthenticated && <FocusSessionOverlay />}
+      {auth.isAuthenticated && (
+        <Modal
+          isOpen={Boolean(supportNote)}
+          onClose={() => setSupportNote(null)}
+          size="dialog"
+          title={supportNote?.title || 'Focus Note'}
+        >
+          <div className="focus-support-note">
+            <p>{supportNote?.content || 'No note content.'}</p>
+          </div>
+        </Modal>
+      )}
       {auth.isAuthenticated && (
         <FocusSummaryModal
           onClose={() => setLastFocusSummary(null)}

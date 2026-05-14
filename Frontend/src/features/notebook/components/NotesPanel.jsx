@@ -1,7 +1,7 @@
 import { formatShortDate } from '../../../utils/date'
 import { NOTEBOOK_MODAL } from '../hooks/useNotebook'
 
-function NotesPanel({ notes, onOpenModal }) {
+function NotesPanel({ notes, onDeleteNote, onEditNote, onOpenModal }) {
   return (
     <div className="notebook-panel notebook-panel--notes">
       <div className="notebook-panel-header">
@@ -23,7 +23,25 @@ function NotesPanel({ notes, onOpenModal }) {
             <article className="note-row" key={note.id}>
               <strong>{note.title}</strong>
               <p>{note.content}</p>
-              <span>Updated {formatShortDate(note.updated_at || note.created_at)}</span>
+              <div className="note-row__footer">
+                <span>Updated {formatShortDate(note.updated_at || note.created_at)}</span>
+                <div className="note-row__actions">
+                  <button
+                    className="ghost-button ghost-button--small"
+                    onClick={() => onEditNote(note)}
+                    type="button"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="pill-card__delete"
+                    onClick={() => onDeleteNote(note.id)}
+                    type="button"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
             </article>
           ))}
         </div>

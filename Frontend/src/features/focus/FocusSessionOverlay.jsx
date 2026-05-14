@@ -11,6 +11,8 @@ function FocusSessionOverlay() {
     endFocus,
     isExpired,
     isOverlayOpen,
+    downloadSupportResource,
+    openSupportNote,
     progress,
     remainingSeconds,
     supportContext,
@@ -92,7 +94,11 @@ function FocusSessionOverlay() {
             <div>
               <h3>Notes</h3>
               {supportContext.notes.length > 0 ? (
-                supportContext.notes.map((note) => <p key={note.id}>{note.title}</p>)
+                supportContext.notes.map((note) => (
+                  <button className="focus-support-link" key={note.id} onClick={() => openSupportNote(note)} type="button">
+                    {note.title}
+                  </button>
+                ))
               ) : (
                 <p className="muted">No linked notes for this focus block.</p>
               )}
@@ -100,7 +106,16 @@ function FocusSessionOverlay() {
             <div>
               <h3>Resources</h3>
               {supportContext.resources.length > 0 ? (
-                supportContext.resources.map((resource) => <p key={resource.id}>{resource.original_name}</p>)
+                supportContext.resources.map((resource) => (
+                  <button
+                    className="focus-support-link"
+                    key={resource.id}
+                    onClick={() => downloadSupportResource(resource)}
+                    type="button"
+                  >
+                    {resource.original_name}
+                  </button>
+                ))
               ) : (
                 <p className="muted">No notebook resources linked yet.</p>
               )}

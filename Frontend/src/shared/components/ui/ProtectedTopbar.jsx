@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../app/providers/AuthContext'
 import { BackIcon } from './Icons'
 
@@ -12,7 +12,15 @@ function ProtectedTopbar({
   title,
 }) {
   const auth = useAuth()
+  const location = useLocation()
   const navigate = useNavigate()
+  const returnTo = `${location.pathname}${location.search}`
+  const returnLabel = String(title || '').startsWith('Hello,') ? 'Dashboard' : title || 'Back'
+  const settingsState = {
+    returnLabel,
+    returnState: location.state || null,
+    returnTo,
+  }
 
   function logout() {
     auth.logout()
@@ -38,7 +46,11 @@ function ProtectedTopbar({
       <div className="app-topbar__actions">
         {actions}
         {showSettings && (
-          <Link className="dashboard-tool-button dashboard-tool-button--text topbar__link" to="/settings">
+          <Link
+            className="dashboard-tool-button dashboard-tool-button--text topbar__link"
+            state={settingsState}
+            to="/settings"
+          >
             Settings
           </Link>
         )}
