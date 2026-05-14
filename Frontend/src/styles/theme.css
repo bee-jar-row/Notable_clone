@@ -1,8 +1,13 @@
-/* Reference grayscale theme, sampled from the supplied dashboard mockup. */
+/* Custom Cream Theme matching Login Aesthetic */
+@import url('https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Geist+Mono:wght@300;400&display=swap');
+
 body,
-.auth-page {
-  background: #FFFFFF;
-  color: var(--color-text);
+.auth-page,
+.dashboard-page,
+.notebook-page {
+  background: #f5f4f1 !important;
+  color: #1a1a1a;
+  font-family: 'Inria Serif', Georgia, serif !important;
 }
 
 h1,
@@ -14,8 +19,17 @@ h3,
 .notebook-topbar h1,
 .settings-topbar h1,
 .chapter-reader h2,
-.folder-detail-section-header h2 {
-  color: var(--reference-ink);
+.folder-detail-section-header h2,
+.dashboard-panel__header h2,
+.notebook-panel-header h2,
+.chapter-card-new h3,
+.pill-card-title,
+strong {
+  color: #1a1a1a;
+  font-family: 'Inria Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  font-style: italic !important;
+  letter-spacing: -0.02em !important;
 }
 
 .topbar,
@@ -24,8 +38,8 @@ h3,
 .settings-topbar,
 .folder-detail-topbar,
 .chapter-detail-topbar {
-  border-color: #C4C4C2;
-  background: var(--reference-panel);
+  border-color: #dddbd6;
+  background: #f5f4f1;
 }
 
 .dashboard-panel,
@@ -36,8 +50,10 @@ h3,
 .chapter-reader,
 .chapter-editor-panel,
 .modal-content {
-  border-color: #CFCFCD;
-  background: var(--reference-panel);
+  border-color: #dddbd6;
+  background: #faf9f7;
+  border-radius: 6px;
+  box-shadow: none;
 }
 
 .dashboard-panel__header,
@@ -45,8 +61,8 @@ h3,
 .modal-header,
 .settings-card__header,
 .panel__header {
-  border-color: #A7A7A5;
-  background: var(--reference-panel);
+  border-color: #dddbd6;
+  background: #faf9f7;
 }
 
 .dashboard-panel__body,
@@ -54,7 +70,7 @@ h3,
 .settings-card,
 .auth-card,
 .chapter-editor-form {
-  background: var(--reference-panel);
+  background: #faf9f7;
 }
 
 .calendar-event-row,
@@ -65,8 +81,9 @@ h3,
 .chapter-card-new,
 .demo-login-card,
 .calendar-empty-state {
-  border-color: #D6D6D4;
-  background: #FFFFFF;
+  border-color: #dddbd6 !important;
+  background: #faf9f7 !important;
+  border-radius: 4px;
 }
 
 .folder-card,
@@ -74,8 +91,8 @@ h3,
 .dashboard-notebook-card,
 .notebook-info,
 .chapter-reader {
-  border-color: #D0D0CE;
-  background: var(--reference-panel);
+  border-color: #dddbd6 !important;
+  background: #faf9f7 !important;
 }
 
 .folder-tab,
@@ -86,18 +103,23 @@ h3,
 .pill-card--completed .pill-card__check,
 .pill-card--completed .pill-card__status,
 .floating-timer__bar span {
-  background: var(--reference-cover);
+  background: #dddbd6;
 }
 
 .dashboard-notebook-card .notebook-cover svg line,
 .notebook-cover svg line {
-  stroke: #DCDCDC;
+  stroke: #dddbd6;
 }
 
 button,
 .auth-submit-btn {
-  background: var(--reference-cover);
-  color: #FFFFFF;
+  background: #1a1a1a;
+  color: #f5f4f1;
+  font-family: 'Geist Mono', monospace !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  border-radius: 4px;
 }
 
 .ghost-button,
@@ -111,9 +133,13 @@ button,
 .pill-card__delete,
 .add-card-button__action,
 .resource-row__action {
-  border-color: #CFCFCD;
-  background: #F7F7F7;
-  color: var(--reference-ink);
+  border-color: #dddbd6;
+  background: transparent;
+  color: #555;
+  font-family: 'Geist Mono', monospace !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
 }
 
 .dashboard-tool-button:hover,
@@ -134,9 +160,9 @@ button,
 .add-card-button__action:focus-visible,
 .resource-row__action:hover,
 .resource-row__action:focus-visible {
-  border-color: var(--reference-cover);
-  background: #FFFFFF;
-  color: var(--reference-cover);
+  border-color: #b0aea8;
+  background: #eeecea;
+  color: #1a1a1a;
 }
 
 input,
@@ -146,16 +172,25 @@ textarea,
 .dashboard-search,
 .notebook-search,
 .search-box {
-  border-color: #A7A7A5;
-  background: #EFEFEF;
-  color: var(--color-text);
+  border-color: #dddbd6;
+  background: #faf9f7;
+  color: #1a1a1a;
+  font-family: 'Inria Serif', Georgia, serif !important;
 }
 
 input::placeholder,
 textarea::placeholder,
 .dashboard-search input::placeholder,
 .notebook-search input::placeholder {
-  color: #6F6F6D;
+  color: #bbb;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  border-color: #888;
+  box-shadow: none;
 }
 
 .muted,
@@ -168,60 +203,68 @@ textarea::placeholder,
 .dashboard-notebook-card span,
 .settings-card__header p,
 .chapter-meta,
-.note-row span {
-  color: var(--color-muted);
+.note-row span,
+.priority-badge,
+.load-badge,
+.reminder-badge,
+.dashboard-panel__count {
+  color: #888;
+  font-family: 'Geist Mono', monospace !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
 }
 
 .workspace-item__delete {
-  border: 1px solid #CFCFCD;
-  background: rgba(255,255,255,0.94);
-  color: var(--reference-ink);
+  border-color: #dddbd6;
+  background: #faf9f7;
+  color: #1a1a1a;
 }
 
 .workspace-grid,
 .dashboard-page .workspace-grid {
-  border-color: #D0D0CE;
+  border-color: #dddbd6;
 }
 
 .dashboard-menu__content {
-  border-color: #CFCFCD;
-  background: #FFFFFF;
+  border-color: #dddbd6;
+  background: #faf9f7;
 }
 
 .dashboard-menu__section button.is-active {
-  border-color: var(--reference-cover);
-  background: var(--reference-cover);
-  color: #FFFFFF;
+  border-color: #1a1a1a;
+  background: #1a1a1a;
+  color: #f5f4f1;
 }
 
 .dashboard-check-button,
 .pill-card__check,
 .pill-card__status {
-  border-color: var(--reference-cover);
-  background: #FFFFFF;
+  border-color: #dddbd6;
+  background: #faf9f7;
 }
 
 .pill-card--completed {
-  background: #F2F2F2;
+  background: #eeecea;
 }
 
 .floating-timer {
-  border-color: #CFCFCD;
-  background: var(--reference-panel);
+  border-color: #dddbd6;
+  background: #faf9f7;
 }
 
 .modal-overlay {
-  background: rgba(79,79,77,0.38);
+  background: rgba(245, 244, 241, 0.85);
 }
 
 .error {
-  border-color: #C9A8A8;
-  background: #EFE2E2;
-  color: #6E3A3A;
+  border-color: #c9a8a8;
+  background: #efe2e2;
+  color: #6e3a3a;
 }
 
 .success {
-  border-color: #AEBBAF;
-  background: #E6E9E3;
-  color: #3F5D43;
+  border-color: #aebbaf;
+  background: #e6e9e3;
+  color: #3f5d43;
 }

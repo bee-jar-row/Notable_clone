@@ -29,8 +29,6 @@ const styles = `
 
   .dashboard-sidebar {
     border-left: 1px solid #dddbd6;
-    display: flex;
-    flex-direction: column;
     background: #faf9f7;
   }
 
