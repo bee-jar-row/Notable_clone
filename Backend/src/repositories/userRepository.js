@@ -19,7 +19,7 @@ class User {
 
   // Find user by ID
   static findById(id) {
-    return db.prepare('SELECT id, name, email, display_name, role, created_at FROM users WHERE id = ?').get(id);
+    return db.prepare('SELECT id, name, email, password_hash, display_name, role, created_at FROM users WHERE id = ?').get(id);
   }
 
   static findPublicById(id) {
