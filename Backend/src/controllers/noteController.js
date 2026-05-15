@@ -14,8 +14,8 @@ class NoteController {
   // Create a new note
   static create(req, res) {
     try {
-      const { title, content, todo_id } = req.body;
-      const noteId = Note.create(req.userId, title, content, todo_id || null);
+      const { title, content, todo_id, notebook_id } = req.body;
+      const noteId = Note.create(req.userId, title, content, todo_id || null, notebook_id || null);
       res.status(201).json({ message: 'Note created!', noteId });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });

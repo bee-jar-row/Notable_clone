@@ -1,25 +1,4 @@
-import { apiBlobRequest, apiRequest } from '../../shared/api/api'
-
-function buildNotebookBody(payload) {
-  if (payload.cover_file) {
-    const formData = new FormData()
-    formData.append('title', payload.title)
-    if (payload.folder_id) formData.append('folder_id', payload.folder_id)
-    if (payload.cover_type) formData.append('cover_type', payload.cover_type)
-    if (payload.cover_color) formData.append('cover_color', payload.cover_color)
-    formData.append('cover', payload.cover_file)
-    return formData
-  }
-
-  return JSON.stringify(payload)
-}
-
-function buildNotebookOptions(method, payload) {
-  return {
-    method,
-    body: buildNotebookBody(payload),
-  }
-}
+import { apiRequest } from '../../shared/api/api'
 
 export function getFolders() {
   return apiRequest('/folders')
@@ -41,15 +20,10 @@ export function getNotebooks() {
 }
 
 export function createNotebook(payload) {
-  return apiRequest('/notebooks', buildNotebookOptions('POST', payload))
-}
-
-export function updateNotebook(notebookId, payload) {
-  return apiRequest(`/notebooks/${notebookId}`, buildNotebookOptions('PATCH', payload))
-}
-
-export function getNotebookCover(notebookId) {
-  return apiBlobRequest(`/notebooks/${notebookId}/cover`)
+  return apiRequest('/notebooks', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
 }
 
 export function deleteNotebook(notebookId) {

@@ -50,12 +50,6 @@ function initializeSchema(db) {
       user_id TEXT NOT NULL,
       folder_id TEXT,
       title TEXT NOT NULL,
-      cover_type TEXT DEFAULT 'default' CHECK(cover_type IN ('default', 'color', 'image')),
-      cover_color TEXT,
-      cover_image_filename TEXT,
-      cover_image_original_name TEXT,
-      cover_image_mimetype TEXT,
-      cover_image_size INTEGER,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
       FOREIGN KEY (folder_id) REFERENCES folders(id) ON DELETE SET NULL
@@ -130,12 +124,7 @@ function initializeSchema(db) {
   ensureColumn(db, 'todos', 'reminder_at', 'DATETIME');
   ensureColumn(db, 'focus_sessions', 'title', 'TEXT');
   ensureColumn(db, 'focus_sessions', 'session_notes', 'TEXT');
-  ensureColumn(db, 'notebooks', 'cover_type', "TEXT DEFAULT 'default'");
-  ensureColumn(db, 'notebooks', 'cover_color', 'TEXT');
-  ensureColumn(db, 'notebooks', 'cover_image_filename', 'TEXT');
-  ensureColumn(db, 'notebooks', 'cover_image_original_name', 'TEXT');
-  ensureColumn(db, 'notebooks', 'cover_image_mimetype', 'TEXT');
-  ensureColumn(db, 'notebooks', 'cover_image_size', 'INTEGER');
+  ensureColumn(db, 'notes', 'notebook_id', 'TEXT');
 }
 
 module.exports = {

@@ -45,7 +45,8 @@ const todoRules = [
 const noteRules = [
   body('title').notEmpty().withMessage('Title is required!'),
   body('content').notEmpty().withMessage('Content is required!'),
-  body('todo_id').optional()
+  body('todo_id').optional(),
+  body('notebook_id').optional()
 ];
 
 module.exports = { validate, registerRules, loginRules, todoRules, noteRules };

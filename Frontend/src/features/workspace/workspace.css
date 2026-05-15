@@ -76,20 +76,12 @@
   height: 80px;
   background: #F0F0F0;
   position: relative;
-  overflow: hidden;
 }
 
 .notebook-cover svg {
   width: 100%;
   height: 100%;
   display: block;
-}
-
-.notebook-cover img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
 }
 
 .notebook-info {
@@ -162,132 +154,6 @@
 
 .folder-notebook-grid .workspace-item__link {
   height: 148px;
-}
-
-.notebook-cover-picker {
-  display: grid;
-  gap: 14px;
-  padding: 0;
-  border: 0;
-}
-
-.notebook-cover-picker legend {
-  margin-bottom: 10px;
-  color: #1A1A1A;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.notebook-cover-picker__modes {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  overflow: hidden;
-  border: 1px solid #dddbd6;
-  border-radius: 6px;
-  background: #faf9f7;
-}
-
-.notebook-cover-picker__mode {
-  display: flex;
-  min-height: 40px;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  border-right: 1px solid #dddbd6;
-  background: transparent;
-  color: #4F4F4D;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.notebook-cover-picker__mode:last-child {
-  border-right: 0;
-}
-
-.notebook-cover-picker__mode input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-}
-
-.notebook-cover-picker__mode.is-selected {
-  background: #1a1a1a;
-  color: #f5f4f1;
-}
-
-.notebook-cover-picker__colors {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.cover-swatch {
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
-  min-height: 30px;
-  border: 2px solid transparent;
-  border-radius: 50%;
-  background: var(--swatch-color);
-  padding: 0;
-  box-shadow: inset 0 0 0 1px rgba(26,26,26,0.12);
-}
-
-.cover-swatch.is-selected {
-  border-color: #1A303A;
-  box-shadow: 0 0 0 2px #faf9f7, 0 0 0 4px #1A303A;
-}
-
-.cover-custom-color {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #4F5E6B;
-  font-size: 13px;
-}
-
-.cover-custom-color input {
-  width: 40px;
-  height: 32px;
-  padding: 0;
-  border: 1px solid #dddbd6;
-  border-radius: 6px;
-  background: transparent;
-}
-
-.notebook-cover-picker__image {
-  display: grid;
-  gap: 10px;
-}
-
-.notebook-cover-picker__preview {
-  height: 108px;
-  overflow: hidden;
-  border: 1px solid #dddbd6;
-  border-radius: 6px;
-  background: #faf9f7;
-}
-
-.notebook-cover-picker__preview img,
-.notebook-cover-picker__preview span {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.notebook-cover-picker__preview img {
-  object-fit: cover;
-}
-
-.notebook-cover-picker__preview span {
-  display: grid;
-  place-items: center;
-  color: #6F6F6D;
-  font-size: 13px;
 }
 
 .folder-detail-timeline {

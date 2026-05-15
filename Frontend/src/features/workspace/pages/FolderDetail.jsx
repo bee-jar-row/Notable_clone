@@ -4,21 +4,12 @@ import FeedbackBanner from '../../../shared/components/ui/FeedbackBanner'
 import Modal from '../../../shared/components/ui/Modal'
 import ProtectedTopbar from '../../../shared/components/ui/ProtectedTopbar'
 import { formatDateGroup, formatTime } from '../../../utils/date'
-import NotebookCardActions from '../components/NotebookCardActions'
-import NotebookCoverPicker from '../components/NotebookCoverPicker'
 import NotebookCard from '../components/NotebookCard'
 import {
-  EMPTY_NOTEBOOK_COVER,
-  getNotebookCoverForm,
-  getNotebookCoverPayload,
-} from '../notebookCover'
-import {
   createNotebook,
-  deleteNotebook as deleteNotebookRequest,
   getFolderNotebooks,
   getFolders,
   getTodos,
-  updateNotebook,
 } from '../workspace.api'
 
 function groupTodosByDate(todos) {
@@ -37,10 +28,7 @@ function FolderDetail() {
   const [notebooks, setNotebooks] = useState([])
   const [todos, setTodos] = useState([])
   const [notebookTitle, setNotebookTitle] = useState('')
-  const [notebookCover, setNotebookCover] = useState(EMPTY_NOTEBOOK_COVER)
-  const [editingNotebook, setEditingNotebook] = useState(null)
   const [isCreateNotebookOpen, setIsCreateNotebookOpen] = useState(false)
-  const [isEditCoverOpen, setIsEditCoverOpen] = useState(false)
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -106,63 +94,10 @@ function FolderDetail() {
     setMessage('')
 
     try {
-      await createNotebook({
-        title: notebookTitle,
-        folder_id: id,
-        ...getNotebookCoverPayload(notebookCover),
-      })
+      await createNotebook({ title: notebookTitle, folder_id: id })
       setNotebookTitle('')
-      setNotebookCover(EMPTY_NOTEBOOK_COVER)
       setIsCreateNotebookOpen(false)
       setMessage('Notebook created.')
-      await loadFolder()
-    } catch (err) {
-      setError(err.message)
-    }
-  }
-
-  function openEditCover(notebook) {
-    setEditingNotebook(notebook)
-    setNotebookCover(getNotebookCoverForm(notebook))
-    setIsEditCoverOpen(true)
-  }
-
-  function closeEditCover() {
-    setEditingNotebook(null)
-    setNotebookCover(EMPTY_NOTEBOOK_COVER)
-    setIsEditCoverOpen(false)
-  }
-
-  async function submitNotebookCover(event) {
-    event.preventDefault()
-    if (!editingNotebook) return
-
-    setError('')
-    setMessage('')
-
-    try {
-      await updateNotebook(editingNotebook.id, {
-        title: editingNotebook.title,
-        folder_id: editingNotebook.folder_id || null,
-        ...getNotebookCoverPayload(notebookCover, editingNotebook),
-      })
-      closeEditCover()
-      setMessage('Notebook cover updated.')
-      await loadFolder()
-    } catch (err) {
-      setError(err.message)
-    }
-  }
-
-  async function deleteNotebook(notebookId) {
-    if (!window.confirm('Are you sure you want to delete this notebook?')) return
-
-    setError('')
-    setMessage('')
-
-    try {
-      await deleteNotebookRequest(notebookId)
-      setMessage('Notebook deleted.')
       await loadFolder()
     } catch (err) {
       setError(err.message)
@@ -209,27 +144,17 @@ function FolderDetail() {
             </div>
             <div className="folder-notebook-grid">
               {notebooks.map((notebook) => (
-                <div className="workspace-item folder-detail-notebook-item" key={notebook.id}>
-                  <Link
-                    className="workspace-item__link"
-                    state={{ fromFolder: { id, title: folder.title } }}
-                    to={`/notebook/${notebook.id}`}
-                  >
-                    <NotebookCard
-                      coverColor={notebook.cover_color}
-                      coverImageFilename={notebook.cover_image_filename}
-                      coverType={notebook.cover_type}
-                      notebookId={notebook.id}
-                      taskCount={todoCountsByNotebookId.get(String(notebook.id)) || 0}
-                      title={notebook.title}
-                    />
-                  </Link>
-                  <NotebookCardActions
-                    notebook={notebook}
-                    onDelete={deleteNotebook}
-                    onEditCover={openEditCover}
+                <Link
+                  className="workspace-item__link"
+                  key={notebook.id}
+                  state={{ fromFolder: { id, title: folder.title } }}
+                  to={`/notebook/${notebook.id}`}
+                >
+                  <NotebookCard
+                    taskCount={todoCountsByNotebookId.get(String(notebook.id)) || 0}
+                    title={notebook.title}
                   />
-                </div>
+                </Link>
               ))}
               {notebooks.length === 0 && <p className="muted">No notebooks in this folder yet.</p>}
             </div>
@@ -268,10 +193,7 @@ function FolderDetail() {
 
       <Modal
         isOpen={isCreateNotebookOpen}
-        onClose={() => {
-          setNotebookCover(EMPTY_NOTEBOOK_COVER)
-          setIsCreateNotebookOpen(false)
-        }}
+        onClose={() => setIsCreateNotebookOpen(false)}
         size="dialog"
         title="Create Notebook"
       >
@@ -288,24 +210,7 @@ function FolderDetail() {
           <p className="muted folder-detail-modal-note">
             This notebook will be added to {folder?.title || 'this folder'}.
           </p>
-          <NotebookCoverPicker onChange={setNotebookCover} value={notebookCover} />
           <button className="auth-submit-btn" type="submit">Create Notebook</button>
-        </form>
-      </Modal>
-
-      <Modal
-        isOpen={isEditCoverOpen}
-        onClose={closeEditCover}
-        size="dialog"
-        title="Edit Notebook Cover"
-      >
-        <form className="stack modal-form" onSubmit={submitNotebookCover}>
-          <NotebookCoverPicker
-            hasImageCover={editingNotebook?.cover_type === 'image'}
-            onChange={setNotebookCover}
-            value={notebookCover}
-          />
-          <button className="auth-submit-btn" type="submit">Save Cover</button>
         </form>
       </Modal>
     </main>

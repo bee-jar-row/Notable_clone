@@ -116,78 +116,31 @@
   transform: translateY(-2px);
 }
 
-.workspace-item > .dashboard-menu {
+.workspace-item__delete {
   position: absolute;
   top: 10px;
   right: 10px;
   z-index: 2;
+  border-color: #E5E5E5;
+  background: rgba(255,255,255,0.92);
+  color: #4F5E6B;
+  box-shadow: 0 8px 18px rgba(15,31,44,0.10);
   opacity: 0;
   transform: translateY(-4px);
-  transition: opacity 0.16s ease, transform 0.16s ease;
+  transition: opacity 0.16s ease, transform 0.16s ease, border-color 0.16s ease, color 0.16s ease;
 }
 
-.workspace-item:hover > .dashboard-menu,
-.workspace-item:focus-within > .dashboard-menu,
-.workspace-item > .dashboard-menu.is-open {
+.workspace-item:hover .workspace-item__delete,
+.workspace-item:focus-within .workspace-item__delete {
   opacity: 1;
   transform: translateY(0);
 }
 
-.workspace-item__menu-button {
-  display: inline-grid;
-  width: 30px;
-  height: 30px;
-  min-height: 30px;
-  place-items: center;
-  border: 1px solid #E5E5E5;
-  border-radius: 8px;
-  background: rgba(250,249,247,0.94);
-  color: #4F5E6B;
-  box-shadow: 0 6px 16px rgba(15,31,44,0.08);
-  padding: 0;
-}
-
-.workspace-item__menu-button:hover,
-.workspace-item__menu-button:focus-visible {
-  border-color: #1A1A1A;
-  background: #1A1A1A;
-  color: #F5F4F1;
-  outline: none;
-}
-
-.workspace-item__menu-button .ui-icon {
-  width: 18px;
-  height: 18px;
-}
-
-.workspace-item > .dashboard-menu .dashboard-menu__content {
-  min-width: 148px;
-  gap: 4px;
-  padding: 6px;
-  border-radius: 6px;
-  box-shadow: 0 10px 26px rgba(15,31,44,0.14);
-}
-
-.workspace-item__menu-section {
-  gap: 2px;
-}
-
-.workspace-item__menu-section button {
-  min-height: 32px;
-  padding: 7px 10px;
-  border-radius: 4px;
-  font-size: 13px;
-}
-
-.workspace-item__menu-section button.workspace-item__menu-danger {
-  color: #9A2E2E;
-}
-
-.workspace-item__menu-section button.workspace-item__menu-danger:hover,
-.workspace-item__menu-section button.workspace-item__menu-danger:focus-visible {
+.workspace-item__delete:hover,
+.workspace-item__delete:focus-visible {
   border-color: #D94B4B;
-  background: #FFF3F3;
   color: #B32020;
+  outline: none;
 }
 
 .notebook-card,

@@ -4,12 +4,12 @@ const { randomUUID } = require('crypto');
 class Note {
 
 // Create a new note, optionally linked to a todo
-  static create(userId, title, content, todoId = null) {
+  static create(userId, title, content, todoId = null, notebookId = null) {
     const id = randomUUID();
     db.prepare(`
-      INSERT INTO notes (id, user_id, todo_id, title, content)
-      VALUES (?, ?, ?, ?, ?)
-    `).run(id, userId, todoId, title, content);
+      INSERT INTO notes (id, user_id, todo_id, notebook_id, title, content)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).run(id, userId, todoId, notebookId, title, content);
     return id;
   }
 

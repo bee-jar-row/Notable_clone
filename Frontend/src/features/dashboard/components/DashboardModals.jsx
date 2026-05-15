@@ -1,24 +1,19 @@
 import Modal from '../../../shared/components/ui/Modal'
 import { getDefaultReminderAt } from '../../../utils/reminders'
-import NotebookCoverPicker from '../../workspace/components/NotebookCoverPicker'
 import { DASHBOARD_MODAL } from '../hooks/useDashboard'
 
 function DashboardModals({
   activeModal,
-  editingNotebook,
   folderTitle,
   folders,
   notebooks,
-  notebookCover,
   notebookTitle,
   onClose,
   onFolderTitleChange,
-  onNotebookCoverChange,
   onNotebookTitleChange,
   onSelectedFolderChange,
   onSubmitFolder,
   onSubmitNotebook,
-  onSubmitNotebookCover,
   onSubmitTodo,
   onTodoFormChange,
   selectedFolder,
@@ -103,24 +98,7 @@ function DashboardModals({
               ))}
             </select>
           </label>
-          <NotebookCoverPicker onChange={onNotebookCoverChange} value={notebookCover} />
           <button className="auth-submit-btn" type="submit">Create Notebook</button>
-        </form>
-      </Modal>
-
-      <Modal
-        isOpen={activeModal === DASHBOARD_MODAL.NOTEBOOK_COVER}
-        onClose={onClose}
-        size="dialog"
-        title="Edit Notebook Cover"
-      >
-        <form className="stack modal-form" onSubmit={onSubmitNotebookCover}>
-          <NotebookCoverPicker
-            hasImageCover={editingNotebook?.cover_type === 'image'}
-            onChange={onNotebookCoverChange}
-            value={notebookCover}
-          />
-          <button className="auth-submit-btn" type="submit">Save Cover</button>
         </form>
       </Modal>
 

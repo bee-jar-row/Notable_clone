@@ -277,7 +277,6 @@ export function FocusSessionProvider({ children }) {
   return (
     <FocusSessionContext.Provider value={value}>
       {children}
-      {auth.isAuthenticated && activeSession && <FocusTimerWidget />}
       {auth.isAuthenticated && (
         <FocusSessionPrepareModal
           availableTodos={availableTodos}

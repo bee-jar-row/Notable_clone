@@ -45,12 +45,6 @@ function ProtectedTopbar({
       </div>
       <div className="app-topbar__actions">
         {actions}
-        <Link
-          className="dashboard-tool-button dashboard-tool-button--text topbar__link"
-          to="/focus"
-        >
-          Focus
-        </Link>
         {showSettings && (
           <Link
             className="dashboard-tool-button dashboard-tool-button--text topbar__link"

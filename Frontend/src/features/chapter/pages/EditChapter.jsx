@@ -106,9 +106,11 @@ function EditChapter() {
     }
 
     const formData = new FormData()
-    formData.append('file', resourceFile)
     formData.append('notebook_id', notebookId)
-    formData.append('chapter_id', chapterId)
+    if (chapterId) {
+      formData.append('chapter_id', chapterId)
+    }
+    formData.append('file', resourceFile)
 
     setIsUploading(true)
     try {

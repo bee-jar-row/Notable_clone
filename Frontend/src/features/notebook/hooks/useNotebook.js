@@ -87,7 +87,7 @@ export function useNotebook({ id, onChapterCreated, onMissingNotebook }) {
       setChapters(chaptersData.chapters || [])
       setResources(resourcesData.resources || [])
       setTodos(notebookTodos)
-      setNotes((notesData.notes || []).filter((note) => notebookTodoIds.has(String(note.todo_id))))
+      setNotes((notesData.notes || []).filter((note) => notebookTodoIds.has(String(note.todo_id)) || String(note.notebook_id) === String(id)))
     } catch (err) {
       setError(err.message)
     } finally {
@@ -176,6 +176,7 @@ export function useNotebook({ id, onChapterCreated, onMissingNotebook }) {
           title: noteForm.title,
           content: noteForm.content,
           todo_id: noteForm.todo_id || null,
+          notebook_id: id,
         })),
       editingNoteId ? 'Note updated.' : 'Note created.',
       () => {
@@ -194,11 +195,11 @@ export function useNotebook({ id, onChapterCreated, onMissingNotebook }) {
     }
 
     const formData = new FormData()
-    formData.append('file', resourceForm.file)
     formData.append('notebook_id', id)
     if (resourceForm.chapter_id) {
       formData.append('chapter_id', resourceForm.chapter_id)
     }
+    formData.append('file', resourceForm.file)
 
     return runMutation(
       () => uploadResource(formData),
