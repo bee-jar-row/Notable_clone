@@ -268,3 +268,7 @@ textarea:focus-visible {
   background: #e6e9e3;
   color: #3f5d43;
 }
+
+.reminder-badge--overdue {
+  color: #FFFFFF !important;
+}

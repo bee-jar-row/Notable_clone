@@ -462,4 +462,43 @@
     .focus-edit-grid {
       grid-template-columns: 1fr;
     }
+
+    .focus-page-task__check {
+  background: #fff !important;
+  color: #1a1a1a !important;
+  border: 2px solid #1a1a1a !important;
+  min-height: 26px !important;
+  padding: 0 !important;
+}
+
+.focus-page-task__check.is-complete {
+  background: #1a1a1a !important;
+  color: #f5f4f1 !important;
+}
+
+.focus-page-step__num {
+  background: #e8e6e2 !important;
+  color: #555 !important;
+  min-height: auto !important;
+}
+
+.focus-page-rec__rank {
+  background: #1a1a1a !important;
+  color: #f5f4f1 !important;
+  min-height: auto !important;
+}
+
+.focus-support-card button {
+  background: transparent !important;
+  color: #555 !important;
+  min-height: auto !important;
+  text-transform: none !important;
+  letter-spacing: 0.04em !important;
+  font-size: 0.65rem !important;
+}
+
+.focus-support-card button:hover {
+  color: #1a1a1a !important;
+}
+
 }

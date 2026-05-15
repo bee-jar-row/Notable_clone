@@ -8,11 +8,20 @@ import NewPassword from '../features/auth/pages/NewPassword'
 import Settings from '../features/settings/pages/Settings'
 import EditChapter from '../features/chapter/pages/EditChapter'
 import FolderDetail from '../features/workspace/pages/FolderDetail'
+import FocusPage from '../features/focus/pages/FocusPage'
 import { ProtectedRoute } from './providers/AuthContext'
 
 function AppRoutes() {
   return (
     <Routes>
+      <Route
+        path="/focus"
+        element={(
+          <ProtectedRoute>
+            <FocusPage />
+          </ProtectedRoute>
+        )}
+      />
       <Route path="/notebook" element={<Navigate to="/dashboard" replace />} />
       <Route
         path="/notebook/:id"
