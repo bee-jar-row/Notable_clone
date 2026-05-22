@@ -12,7 +12,7 @@ const DEMO_USER = {
   password: 'demo1234',
 };
 
-const uploadsDir = path.join(__dirname, 'uploads');
+const uploadsDir = process.env.DATA_DIR ? path.join(process.env.DATA_DIR, 'uploads') : path.join(__dirname, 'uploads');
 
 const folders = [
   'Semester 6',

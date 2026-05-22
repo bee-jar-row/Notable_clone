@@ -83,7 +83,8 @@ class ResourceController {
         return res.status(404).json({ message: 'Resource not found!' });
       }
 
-      const filePath = path.join(__dirname, '../../uploads/', resource.filename);
+      const baseUploadsDir = process.env.DATA_DIR ? path.join(process.env.DATA_DIR, 'uploads') : path.join(__dirname, '../../uploads');
+      const filePath = path.join(baseUploadsDir, resource.filename);
 
       if (!fs.existsSync(filePath)) {
         return res.status(404).json({ message: 'File not found on server!' });
@@ -104,7 +105,8 @@ class ResourceController {
       }
 
       // Delete file from disk
-      const filePath = path.join(__dirname, '../../uploads/', resource.filename);
+      const baseUploadsDir = process.env.DATA_DIR ? path.join(process.env.DATA_DIR, 'uploads') : path.join(__dirname, '../../uploads');
+      const filePath = path.join(baseUploadsDir, resource.filename);
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
       }
