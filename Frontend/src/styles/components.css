@@ -84,8 +84,29 @@
   gap: 16px;
 }
 
+/* Fix workspace grid columns and prevent horizontal overflow */
 .workspace-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)); /* fix: paksa selalu 4 kolom */
+  gap: 16px;
   align-content: start;
+}
+/* Prevent the whole page from creating a horizontal scrollbar */
+.dashboard-page {
+  height: 100vh;
+  overflow: hidden; /* sudah ada dari fix sebelumnya */
+  background: #f5f4f1;
+  font-family: 'Inria Serif', Georgia, serif;
+  color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  max-width: 100vw; /* tambah ini */
+}
+/* Ensure the grid columns don't push past viewport */
+.dashboard-grid {
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  min-width: 0;  /* add this */
 }
 
 .workspace-item {
