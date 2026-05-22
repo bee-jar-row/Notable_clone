@@ -1,5 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL
-  || (import.meta.env.PROD ? 'https://notableclone-production.up.railway.app/api' : 'http://localhost:3000/api');
+const API_BASE_URL = 'https://notableclone-production.up.railway.app/api';
 const TOKEN_KEY = 'notable_token'
 const USER_KEY = 'notable_user'
 
